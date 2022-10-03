@@ -2,3 +2,4 @@ dist
 node_modules
 src/tests/__snapshots__
 .env
+.DS_Store

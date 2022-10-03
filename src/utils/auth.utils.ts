@@ -5,7 +5,7 @@ type TokenData = {
   iat: number
 }
 
-export const TOKEN_ITEM_KEY = 'token-RUA'
+export const TOKEN_ITEM_KEY = 'token-books'
 
 export const isAuthenticated = () => {
   const token = localStorage.getItem(TOKEN_ITEM_KEY)

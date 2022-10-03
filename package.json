@@ -3,17 +3,19 @@
   "private": true,
   "version": "0.0.0",
   "scripts": {
-    "dev": "vite",
+    "dev": "npx tailwindcss -i ./src/index.css -o ./dist/output.css --watch & vite",
     "build": "tsc && vite build",
     "preview": "vite preview",
     "format": "npx prettier --write ."
   },
   "dependencies": {
     "axios": "^0.27.2",
+    "classnames": "^2.3.2",
     "jwt-decode": "^3.1.2",
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
-    "react-router-dom": "^6.3.0"
+    "react-hook-form": "^7.36.1",
+    "react-router-dom": "^6.4.1"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "^5.16.4",
@@ -25,10 +27,13 @@
     "@types/react-router-dom": "^5.3.3",
     "@typescript-eslint/eslint-plugin": "^5.28.0",
     "@vitejs/plugin-react": "^1.3.0",
+    "autoprefixer": "^10.4.12",
     "eslint": "^8.16.0",
     "eslint-plugin-react": "^7.30.0",
     "jsdom": "^20.0.0",
+    "postcss": "^8.4.17",
     "prettier": "^2.6.0",
+    "tailwindcss": "^3.1.8",
     "typescript": "^4.6.3",
     "vite": "^2.9.15",
     "vitest": "^0.18.0"
