@@ -30,6 +30,7 @@
     "autoprefixer": "^10.4.12",
     "eslint": "^8.16.0",
     "eslint-plugin-react": "^7.30.0",
+    "eslint-plugin-react-hooks": "^4.6.0",
     "jsdom": "^20.0.0",
     "postcss": "^8.4.17",
     "prettier": "^2.6.0",

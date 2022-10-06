@@ -1,12 +1,11 @@
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useLocation, useNavigate } from 'react-router-dom'
-import { signIn } from '../../services/auth'
+import { signUp } from '../../services/auth'
 import { AuthFormData } from '../../types'
-import { setToken } from '../../utils/auth.utils'
 import { CircularProgress } from '../ui'
 
-export function SignInForm() {
+export const SignUpForm = () => {
   const {
     register,
     handleSubmit,
@@ -24,10 +23,9 @@ export function SignInForm() {
   const onSubmit = async (data: AuthFormData) => {
     setLoading(true)
     setErrorMessage('')
-    const signInResponse = await signIn(data.email, data.password)
+    const signInResponse = await signUp(data.email, data.password)
     setLoading(false)
     if ('access_token' in signInResponse) {
-      setToken(signInResponse.access_token)
       navigate(from, { replace: true })
     } else {
       if ('message' in signInResponse) {
@@ -37,7 +35,6 @@ export function SignInForm() {
       }
     }
   }
-
   return (
     <form className="flex flex-col space-y-2" onSubmit={handleSubmit(onSubmit)}>
       <div>
@@ -64,7 +61,7 @@ export function SignInForm() {
         className="bg-gray-300 disabled:bg-gray-100 disabled:text-gray-400 hover:bg-gray-400 text-gray-800 font-semibold py-2 px-4 rounded inline-flex items-center"
         disabled={isSubmitting}
       >
-        sign in
+        create account
       </button>
       <div className="h-5 flex justify-center">
         {errorMessage ? errorMessage : loading ? <CircularProgress /> : <></>}

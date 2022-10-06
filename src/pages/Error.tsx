@@ -1,5 +1,5 @@
 import { useRouteError } from 'react-router-dom'
-import MainPageTitle from '../components/ui/MainPageTitle'
+import { MainPageTitle } from '../components/ui'
 
 type RouteError = {
   data: any

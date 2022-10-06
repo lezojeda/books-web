@@ -1,6 +1,6 @@
 import classNames from 'classnames'
 
-function MainPageTitle({
+export function MainPageTitle({
   className,
   title,
 }: {
@@ -11,5 +11,3 @@ function MainPageTitle({
     <h1 className={classNames('font-semibold text-3xl', className)}>{title}</h1>
   )
 }
-
-export default MainPageTitle

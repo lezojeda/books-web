@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import MainPageTitle from '../components/ui/MainPageTitle'
+import { MainPageTitle } from '../components/ui'
 import { getToken, TOKEN_ITEM_KEY } from '../utils/auth.utils'
 
 function Home() {
