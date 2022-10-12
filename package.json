@@ -4,6 +4,7 @@
   "version": "0.0.0",
   "scripts": {
     "dev": "npx tailwindcss -i ./src/index.css -o ./dist/output.css --watch & vite",
+    "vite": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview",
     "format": "npx prettier --write ."

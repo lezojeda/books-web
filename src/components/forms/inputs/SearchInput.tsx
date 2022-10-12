@@ -13,7 +13,7 @@ export const SearchInput = ({
     <TextInput
       className={classNames(className)}
       id="search"
-      label="Search books"
+      label="Search books:"
       register={register('search')}
     />
   )
