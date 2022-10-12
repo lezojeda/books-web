@@ -1,11 +1,11 @@
 import axios from 'axios'
 import { getToken } from '../utils/auth.utils'
 
-const axiosInstance = axios.create({
+const apiAxiosInstance = axios.create({
   baseURL: import.meta.env.VITE_API_URL,
 })
 
-axiosInstance.interceptors.request.use(function (config) {
+apiAxiosInstance.interceptors.request.use(function (config) {
   config.headers = {
     Authorization: `Bearer ${getToken()}`,
   }
@@ -13,4 +13,8 @@ axiosInstance.interceptors.request.use(function (config) {
   return config
 })
 
-export default axiosInstance
+const googleBooksApiInstance = axios.create({
+  baseURL: 'https://www.googleapis.com/books/v1',
+})
+
+export { apiAxiosInstance, googleBooksApiInstance }

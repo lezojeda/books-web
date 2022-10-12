@@ -1,6 +1,6 @@
 import axios, { AxiosError } from 'axios'
-import axiosInstance from './axios'
 import { Error, User } from '../types'
+import { apiAxiosInstance } from './axios'
 
 type SignInResponse = {
   access_token: string
@@ -8,10 +8,13 @@ type SignInResponse = {
 
 export const signIn = async (email: string, password: string) => {
   try {
-    const response = await axiosInstance.post<SignInResponse>('/auth/signin', {
-      email,
-      password,
-    })
+    const response = await apiAxiosInstance.post<SignInResponse>(
+      '/auth/signin',
+      {
+        email,
+        password,
+      }
+    )
 
     return response.data
   } catch (error) {
@@ -25,7 +28,7 @@ export const signIn = async (email: string, password: string) => {
 
 export const signUp = async (email: string, password: string) => {
   try {
-    const response = await axiosInstance.post<User>('/auth/signup', {
+    const response = await apiAxiosInstance.post<User>('/auth/signup', {
       email,
       password,
     })

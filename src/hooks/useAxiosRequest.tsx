@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import axiosInstance from '../services/axios'
+import { apiAxiosInstance } from '../services/axios'
 
 type Parameters = {
   url: string
@@ -13,7 +13,7 @@ const useAxios = ({ url, method, data = null }: Parameters) => {
   const [loading, setLoading] = useState(true)
 
   const fetchData = () => {
-    axiosInstance({ url, method, data })
+    apiAxiosInstance({ url, method, data })
       .then((response) => {
         setResponse(response.data)
       })
