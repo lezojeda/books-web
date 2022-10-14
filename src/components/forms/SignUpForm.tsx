@@ -3,7 +3,7 @@ import { useForm } from 'react-hook-form'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { signUp } from '../../services/auth'
 import { AuthFormData } from '../../types'
-import { CircularProgress } from '../ui'
+import { CircularProgress, PrimaryButton } from '../ui'
 import { TextInput } from './inputs/TextInput'
 
 export const SignUpForm = () => {
@@ -37,7 +37,10 @@ export const SignUpForm = () => {
     }
   }
   return (
-    <form className="flex flex-col space-y-2" onSubmit={handleSubmit(onSubmit)}>
+    <form
+      className="w-full justify-center items-center flex flex-col space-y-2"
+      onSubmit={handleSubmit(onSubmit)}
+    >
       <TextInput
         id="email"
         label="E-mail"
@@ -49,12 +52,10 @@ export const SignUpForm = () => {
         register={register('password', { required: true })}
         type="password"
       />
-      <button
-        className="bg-gray-300 disabled:bg-gray-100 disabled:text-gray-400 hover:bg-gray-400 text-gray-800 font-semibold py-2 px-4 rounded inline-flex items-center"
+      <PrimaryButton
+        content="create account"
         disabled={isSubmitting}
-      >
-        create account
-      </button>
+      />
       <div className="h-5 flex justify-center">
         {errorMessage ? errorMessage : loading ? <CircularProgress /> : <></>}
       </div>

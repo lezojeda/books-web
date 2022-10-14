@@ -22,8 +22,11 @@ export const TextInput = ({
         {label}
       </label>
       <input
+        className={classNames(
+          className,
+          'border border-primary-light rounded p-1'
+        )}
         {...register}
-        className={classNames(className, 'border p-1')}
         placeholder={placeholder}
         type={type}
       />

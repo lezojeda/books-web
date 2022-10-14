@@ -53,7 +53,7 @@ export const NavbarVolumeSearch = () => {
           {volumes?.map((v: Volume, i: number) => (
             <li
               key={v.id}
-              className={`py-1 w-full cursor-pointer hover:bg-slate-100 ${
+              className={`py-1 w-full cursor-pointer hover:bg-backgroundColor ${
                 i === volumes.length - 1 ? '' : 'border-b'
               }`}
             >

@@ -1,5 +1,5 @@
 import { Link, Outlet, useLocation } from 'react-router-dom'
-import { MainPageTitle } from '../components/ui'
+import { MainPageTitle, SecondaryButton } from '../components/ui'
 import { getToken, TOKEN_ITEM_KEY } from '../utils/auth.utils'
 
 function Root() {
@@ -17,12 +17,10 @@ function Root() {
       {location.pathname !== '/auth' && (
         <>
           {getToken() ? (
-            <a
-              className="hover:underline hover:opacity-50 cursor-pointer"
+            <SecondaryButton
+              content="Sign out"
               onClick={signOut}
-            >
-              Sign out
-            </a>
+            />
           ) : (
             <Link to="auth">Sign in</Link>
           )}
