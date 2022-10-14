@@ -2,7 +2,7 @@ import { Link, Outlet, useLocation } from 'react-router-dom'
 import { MainPageTitle, SecondaryButton } from '../components/ui'
 import { getToken, TOKEN_ITEM_KEY } from '../utils/auth.utils'
 
-function Root() {
+export const Root = () => {
   const location = useLocation()
   const signOut = () => {
     localStorage.removeItem(TOKEN_ITEM_KEY)
@@ -10,17 +10,21 @@ function Root() {
   }
   return (
     <>
-      <Outlet />{' '}
+      <div className='mb-6'>
+        <Outlet />{' '}
+      </div>
       {location.pathname === '/' && (
-        <MainPageTitle className="mb-4" title="Home" />
+        <>
+          <MainPageTitle className="mb-2" title="Home" />
+          <Link to="dashboard" style={{ marginBottom: '24px' }}>
+            Dashboard
+          </Link>
+        </>
       )}
       {location.pathname !== '/auth' && (
         <>
           {getToken() ? (
-            <SecondaryButton
-              content="Sign out"
-              onClick={signOut}
-            />
+            <SecondaryButton content="Sign out" onClick={signOut} />
           ) : (
             <Link to="auth">Sign in</Link>
           )}

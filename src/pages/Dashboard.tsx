@@ -1,6 +1,6 @@
-import { MainPageTitle, NavbarVolumeSearch } from '../../components/ui'
+import { MainPageTitle, NavbarVolumeSearch } from '../components/ui'
 
-function Dashboard() {
+export const Dashboard = () => {
   return (
     <div className="mb-4">
       <MainPageTitle className="mb-2 text-center" title="Dashboard" />

@@ -1,14 +1,13 @@
-import { useRouteError } from 'react-router-dom'
+import { Link, useRouteError } from 'react-router-dom'
 import { MainPageTitle } from '../components/ui'
 
 type RouteError = {
-  data: any
   status: number
   statusText?: string
   message?: string
 }
 
-function ErrorPage() {
+export const ErrorPage = () => {
   const error = useRouteError() as RouteError
   console.error(error)
 
@@ -16,9 +15,10 @@ function ErrorPage() {
     <>
       <MainPageTitle className="mb-2" title="Oops!" />
       <p className="text-xl">Sorry, an unexpected error has occurred:</p>
-      <p className="text-xl">
+      <p className="text-xl mb-4">
         <i>{error.statusText || error.message}</i>
       </p>
+      <Link to="/">Go back to home</Link>
     </>
   )
 }

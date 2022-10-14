@@ -1,19 +1,18 @@
+import React from 'react'
 import { createBrowserRouter } from 'react-router-dom'
 import ProtectedRoute from './components/ProtectedRoute'
-import Layout from './layouts/MainLayout'
-import Auth from './pages/auth/Auth'
-import Dashboard from './pages/dashboard/Dashboard'
-import ErrorPage from './pages/Error'
-import Root from './pages/Root'
+import { loader as VolumeLoader } from './pages/Volume'
+
+const Root = React.lazy(() => import('./pages/Root'))
+const ErrorPage = React.lazy(() => import('./pages/Error'))
+const Auth = React.lazy(() => import('./pages/Auth'))
+const Dashboard = React.lazy(() => import('./pages/Dashboard'))
+const Volume = React.lazy(() => import('./pages/Volume'))
 
 export const rootRouter = createBrowserRouter([
   {
     path: '/',
-    element: (
-      <Layout>
-        <Root />
-      </Layout>
-    ),
+    element: <Root />,
     errorElement: <ErrorPage />,
     children: [
       {
@@ -27,6 +26,15 @@ export const rootRouter = createBrowserRouter([
             <Dashboard />
           </ProtectedRoute>
         ),
+      },
+      {
+        path: 'volumes/:volumeId',
+        element: (
+          <ProtectedRoute>
+            <Volume />
+          </ProtectedRoute>
+        ),
+        loader: VolumeLoader,
       },
     ],
   },

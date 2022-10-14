@@ -1,6 +1,7 @@
 import debounce from 'lodash.debounce'
 import { useEffect, useMemo, useState } from 'react'
 import { useForm } from 'react-hook-form'
+import { Link } from 'react-router-dom'
 import { searchVolumes } from '../../services/volume'
 import { Volume } from '../../types'
 import { SearchInput } from '../forms/inputs/SearchInput'
@@ -53,13 +54,23 @@ export const NavbarVolumeSearch = () => {
           {volumes?.map((v: Volume, i: number) => (
             <li
               key={v.id}
-              className={`py-1 w-full cursor-pointer hover:bg-backgroundColor ${
+              className={`w-full cursor-pointer hover:bg-backgroundColor ${
                 i === volumes.length - 1 ? '' : 'border-b'
               }`}
             >
-              <span className="italic">{v.volumeInfo.title}</span>
-              {' - '}
-              {v.volumeInfo.authors ? v.volumeInfo.authors[0] : ''}
+              <Link
+                to={`/volumes/${v.id}`}
+                style={{
+                  display: 'inline-block',
+                  height: '100%',
+                  padding: '4px 0',
+                  width: '100%',
+                }}
+              >
+                <span className="italic">{v.volumeInfo.title}</span>
+                {' - '}
+                {v.volumeInfo.authors ? v.volumeInfo.authors[0] : ''}
+              </Link>
             </li>
           ))}
         </DropdownList>

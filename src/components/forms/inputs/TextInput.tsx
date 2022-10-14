@@ -1,5 +1,11 @@
 import classNames from 'classnames'
+import { ComponentPropsWithoutRef } from 'react'
 import { UseFormRegisterReturn } from 'react-hook-form'
+
+export type Props = ComponentPropsWithoutRef<'input'> & {
+  label: string
+  register: UseFormRegisterReturn
+}
 
 export const TextInput = ({
   className,
@@ -7,15 +13,8 @@ export const TextInput = ({
   label,
   placeholder,
   register,
-  type,
-}: {
-  className?: string
-  id: string
-  label: string
-  placeholder?: string
-  register: UseFormRegisterReturn<any>
-  type?: string
-}) => {
+  type = 'text',
+}: Props) => {
   return (
     <div>
       <label className="block" htmlFor={id}>
@@ -26,9 +25,9 @@ export const TextInput = ({
           className,
           'border border-primary-light rounded p-1'
         )}
-        {...register}
         placeholder={placeholder}
         type={type}
+        {...register}
       />
     </div>
   )

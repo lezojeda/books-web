@@ -1,7 +1,7 @@
-import { SignInForm, SignUpForm } from '../../components/forms'
-import { MainPageTitle } from '../../components/ui'
+import { SignInForm, SignUpForm } from '../components/forms'
+import { MainPageTitle } from '../components/ui'
 
-function SignIn() {
+export const SignIn = () => {
   return (
     <>
       <MainPageTitle className="mb-4" title="Sign in" />

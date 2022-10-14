@@ -9,3 +9,12 @@ export type User = {
   wantsToRead: string[]
   currentlyReading: string[]
 }
+
+export type EditUserDto = {
+  email?: string
+  firstName?: string
+  lastName?: string
+  booksRead?: string[]
+  wantsToRead?: string[]
+  currentlyReading?: string[]
+}

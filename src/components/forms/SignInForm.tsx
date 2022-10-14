@@ -1,9 +1,10 @@
-import { useState } from 'react'
+import { useContext, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useLocation, useNavigate } from 'react-router-dom'
+import { UserContext } from '../../contexts/userContext'
 import { signIn } from '../../services/auth'
 import { AuthFormData } from '../../types'
-import { setToken } from '../../utils/auth.utils'
+import { getUserDataFromToken, setToken } from '../../utils/auth.utils'
 import { CircularProgress, PrimaryButton } from '../ui'
 import { TextInput } from './inputs/TextInput'
 
@@ -15,6 +16,7 @@ export function SignInForm() {
   } = useForm<AuthFormData>()
   const [errorMessage, setErrorMessage] = useState<string>()
   const [loading, setLoading] = useState(false)
+  const { setUser } = useContext(UserContext) || {}
   const navigate = useNavigate()
 
   // Get the previous user's location to redirect them after login
@@ -28,7 +30,10 @@ export function SignInForm() {
     const signInResponse = await signIn(data.email, data.password)
     setLoading(false)
     if ('access_token' in signInResponse) {
-      setToken(signInResponse.access_token)
+      const { access_token } = signInResponse
+      const userData = getUserDataFromToken(access_token)
+      setUser && userData && setUser(userData)
+      setToken(access_token)
       navigate(from, { replace: true })
     } else {
       if ('message' in signInResponse) {
