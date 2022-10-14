@@ -5,3 +5,7 @@
 #root {
   height: 100vh;
 }
+
+a, button {
+  color: theme('colors.primary.DEFAULT');
+}

@@ -17,12 +17,12 @@ function Root() {
       {location.pathname !== '/auth' && (
         <>
           {getToken() ? (
-            <span
+            <a
               className="hover:underline hover:opacity-50 cursor-pointer"
               onClick={signOut}
             >
               Sign out
-            </span>
+            </a>
           ) : (
             <Link to="auth">Sign in</Link>
           )}

@@ -14,6 +14,7 @@ export const SearchInput = ({
       className={classNames(className)}
       id="search"
       label="Search books:"
+      placeholder="Search by author, book name..."
       register={register('search')}
     />
   )
