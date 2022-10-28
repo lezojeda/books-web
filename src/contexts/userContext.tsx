@@ -1,20 +1,34 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { User } from '../types/user'
+import {
+  getToken,
+  getUserDataFromToken,
+  isAuthenticated,
+} from '../utils/auth.utils'
 
-type UserType = Pick<
-  User,
-  'email' | 'booksRead' | 'wantsToRead' | 'currentlyReading'
->
+export type UserContextType = Pick<User, 'email' | 'books'>
 
 export type UserContext = {
-  user?: UserType
-  setUser: (user: UserType) => void
+  user?: UserContextType
+  setUser?: (user: UserContextType) => void
 }
 
-export const UserContext = React.createContext<UserContext | null>(null)
+export const UserContext = React.createContext<UserContext>({
+  user: undefined,
+  setUser: undefined,
+})
 
 export const UserProvider = ({ children }: { children: React.ReactNode }) => {
-  const [user, setUser] = useState<UserType>()
+  const [user, setUser] = useState<UserContextType>()
+
+  useEffect(() => {
+    if (isAuthenticated()) {
+      const sessionData = getUserDataFromToken(getToken() || '')
+      if (sessionData) {
+        setUser && setUser(sessionData)
+      }
+    }
+  }, [])
 
   return (
     <UserContext.Provider value={{ user, setUser }}>

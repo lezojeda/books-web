@@ -1,8 +1,8 @@
 import axios, { AxiosError } from 'axios'
-import { EditUserDto, User } from '../types'
+import { User } from '../types'
 import { apiAxiosInstance } from './axios'
 
-export const updateUser = async (editUserDto: EditUserDto) => {
+export const updateUser = async (editUserDto: Partial<User>) => {
   try {
     const response = await apiAxiosInstance.put<User>('/users', editUserDto)
 

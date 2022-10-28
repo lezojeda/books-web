@@ -1,3 +1,5 @@
+import { Book } from './book'
+
 export type User = {
   id: string
   createdAt: string
@@ -5,16 +7,5 @@ export type User = {
   email: string
   firstName?: string
   lastName?: string
-  booksRead: string[]
-  wantsToRead: string[]
-  currentlyReading: string[]
-}
-
-export type EditUserDto = {
-  email?: string
-  firstName?: string
-  lastName?: string
-  booksRead?: string[]
-  wantsToRead?: string[]
-  currentlyReading?: string[]
+  books: Book[]
 }

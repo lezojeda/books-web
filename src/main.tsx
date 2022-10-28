@@ -5,7 +5,6 @@ import { UserProvider } from './contexts/userContext'
 import Layout from './layouts/MainLayout'
 import { rootRouter } from './RootRouter'
 
-//TODO: Check why user context keeps being reset
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <Suspense fallback={<div>Loading...</div>}>

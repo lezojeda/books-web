@@ -16,7 +16,7 @@ export function SignInForm() {
   } = useForm<AuthFormData>()
   const [errorMessage, setErrorMessage] = useState<string>()
   const [loading, setLoading] = useState(false)
-  const { setUser } = useContext(UserContext) || {}
+  const { setUser } = useContext(UserContext)
   const navigate = useNavigate()
 
   // Get the previous user's location to redirect them after login

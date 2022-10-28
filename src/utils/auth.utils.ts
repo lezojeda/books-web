@@ -1,12 +1,11 @@
 import jwtDecode from 'jwt-decode'
-import { User } from '../types'
+import { UserContextType } from '../contexts/userContext'
+import { Book } from '../types/book'
 
 type TokenData = {
   sub: number
   email: string
-  booksRead: string[]
-  wantsToRead: string[]
-  currentlyReading: string[]
+  books: Book[]
   iat: number
   exp: number
 }
@@ -18,14 +17,12 @@ export const isAuthenticated = () => {
   return !!token
 }
 
-export const getUserDataFromToken = (token: string): Partial<User> | null => {
+export const getUserDataFromToken = (token: string): UserContextType | null => {
   try {
     const tokenData: TokenData = jwtDecode(token)
     const user = {
       email: tokenData.email,
-      booksRead: tokenData.booksRead,
-      wantsToRead: tokenData.wantsToRead,
-      currentlyReading: tokenData.currentlyReading,
+      books: tokenData.books
     }
     return user
   } catch (error) {

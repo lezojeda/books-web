@@ -1,15 +1,15 @@
 import debounce from 'lodash.debounce'
 import { useContext, useEffect, useMemo, useState } from 'react'
 import { useForm } from 'react-hook-form'
-import { Params, useLoaderData } from 'react-router-dom'
-import { RadioInput } from '../components/forms/inputs/RadioInput'
+import { Link, Params, useLoaderData } from 'react-router-dom'
 import { MainPageTitle } from '../components/ui'
 import { getVolume } from '../services/volume'
 import { updateUser } from '../services/user'
 import { Volume as VolumeType } from '../types'
 import { UserContext } from '../contexts/userContext'
+import { ArrowLeftIcon } from '@heroicons/react/24/solid'
 
-type ReadState = 'booksRead' | 'wantsToRead' | 'currentlyReading'
+export type ReadState = 'booksRead' | 'wantsToRead' | 'currentlyReading'
 
 type FormData = {
   readState: ReadState
@@ -20,7 +20,7 @@ export async function loader({ params }: { params: Params<any> }) {
 }
 
 export const Volume = () => {
-  const { user } = useContext(UserContext) || {}
+  const { user } = useContext(UserContext)
   const {
     register,
     watch,
@@ -30,62 +30,65 @@ export const Volume = () => {
   const volume = useLoaderData() as VolumeType
   const data = watch()
 
-  const debouncedUpdateUser = useMemo(() => {
+  const debouncedUpdateUserBooks = useMemo(() => {
     return debounce(async (readState: ReadState) => {
-      if (user) {
-        const editUserDto = {
-          [readState]: [volume.id, ...user[readState]],
-        }
-        setLoading(true)
-        await updateUser(editUserDto)
-        setLoading(false)
+      const book = {
+        readState,
+        bookId: volume.id
       }
+      const editUserDto = {
+        books: [],
+      }
+      setLoading(true)
+      await updateUser(editUserDto)
+      setLoading(false)
     }, 500)
-  }, [user, volume.id])
-
+  }, [])
   useEffect(() => {
     if (isValid && !isValidating && data.readState) {
-      debouncedUpdateUser(data.readState)
+      debouncedUpdateUserBooks(data.readState)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [data.readState, debouncedUpdateUser])
+  }, [data.readState, debouncedUpdateUserBooks])
+
+  const selectedDefaultValue = useMemo(() => {
+    const bookInUser = user?.books.find((book) => book.bookId === volume.id)
+    if (bookInUser) return bookInUser.readState
+  }, [user?.books, volume.id])
 
   return (
-    <div className="text-center space-y-2">
-      <div>
-        <MainPageTitle title={volume.volumeInfo.title} />
-        by {volume.volumeInfo.authors} ({volume.volumeInfo.publishedDate})
+    <div className="text-center space-y-4">
+      <div className="relative w-1/2 mx-auto">
+        <Link
+          className="absolute left-0 w-8 mr-4 hover:opacity-70 cursor-pointer"
+          to="/dashboard"
+        >
+          <ArrowLeftIcon />
+        </Link>
+        <div className="mx-auto">
+          <MainPageTitle title={volume.volumeInfo.title} />
+          {volume.volumeInfo.authors &&
+            volume.volumeInfo.authors.length > 0 && (
+              <p>by {volume.volumeInfo.authors}</p>
+            )}
+          {volume.volumeInfo.publishedDate && (
+            <>({volume.volumeInfo.publishedDate})</>
+          )}
+        </div>
       </div>
-      <form className="flex">
+      <form className="flex flex-col items-center">
         <fieldset>
-          <legend className="font-bold mb-1">Add book to:</legend>
-
-          <RadioInput
-            className="mr-2"
+          <legend className="hidden">Add book to:</legend>
+          <select
+            defaultValue={selectedDefaultValue}
             disabled={loading}
-            id="wantsToRead"
-            label="Want to read"
-            value="wantsToRead"
-            register={register('readState')}
-          />
-
-          <RadioInput
-            className="mr-2"
-            disabled={loading}
-            id="currentlyReading"
-            label="Currently reading"
-            value="currentlyReading"
-            register={register('readState')}
-          />
-
-          <RadioInput
-            className="mr-2"
-            disabled={loading}
-            id="booksRead"
-            label="Already read"
-            value="booksRead"
-            register={register('readState')}
-          />
+            {...register('readState')}
+          >
+            <option value="">Add book to:</option>
+            <option value="currentlyReading">Currently reading</option>
+            <option value="wantsToRead">Want to read</option>
+            <option value="booksRead">Already read</option>
+          </select>
         </fieldset>
       </form>
     </div>

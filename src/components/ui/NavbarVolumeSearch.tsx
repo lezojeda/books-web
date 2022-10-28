@@ -44,7 +44,7 @@ export const NavbarVolumeSearch = () => {
   }, [data.searchValue, debouncedGetVolumes])
 
   return (
-    <form className="flex flex-col space-y-2 relative w-96">
+    <form className="flex flex-col space-y-2 relative w-96 mx-auto">
       <SearchInput
         className="w-full"
         register={() => register('searchValue')}
