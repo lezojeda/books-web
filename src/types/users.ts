@@ -1,4 +1,4 @@
-import { Book } from './book'
+import { Book } from './books'
 
 export type User = {
   id: string

@@ -10,15 +10,17 @@ export const Root = () => {
   }
   return (
     <>
-      <div className='mb-6 w-full'>
+      <div className="mb-6 w-full">
         <Outlet />{' '}
       </div>
       {location.pathname === '/' && (
         <>
           <MainPageTitle className="mb-2" title="Home" />
-          <Link to="dashboard" style={{ marginBottom: '24px' }}>
-            Dashboard
-          </Link>
+          {getToken() && (
+            <Link to="dashboard" style={{ marginBottom: '24px' }}>
+              Dashboard
+            </Link>
+          )}
         </>
       )}
       {location.pathname !== '/auth' && (

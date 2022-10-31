@@ -1,10 +1,11 @@
 import jwtDecode from 'jwt-decode'
 import { UserContextType } from '../contexts/userContext'
-import { Book } from '../types/book'
+import { Book } from '../types/books'
 
 type TokenData = {
   sub: number
   email: string
+  id: string
   books: Book[]
   iat: number
   exp: number
@@ -22,7 +23,8 @@ export const getUserDataFromToken = (token: string): UserContextType | null => {
     const tokenData: TokenData = jwtDecode(token)
     const user = {
       email: tokenData.email,
-      books: tokenData.books
+      books: tokenData.books,
+      id: tokenData.id,
     }
     return user
   } catch (error) {

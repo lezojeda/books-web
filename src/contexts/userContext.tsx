@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react'
-import { User } from '../types/user'
+import { User } from '../types/users'
 import {
   getToken,
   getUserDataFromToken,
   isAuthenticated,
 } from '../utils/auth.utils'
 
-export type UserContextType = Pick<User, 'email' | 'books'>
+export type UserContextType = Pick<User, 'email' | 'books' | 'id'>
 
 export type UserContext = {
   user?: UserContextType

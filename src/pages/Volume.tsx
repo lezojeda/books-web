@@ -3,13 +3,12 @@ import { useContext, useEffect, useMemo, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { Link, Params, useLoaderData } from 'react-router-dom'
 import { MainPageTitle } from '../components/ui'
-import { getVolume } from '../services/volume'
-import { updateUser } from '../services/user'
+import { getVolume } from '../services/volumes'
 import { Volume as VolumeType } from '../types'
 import { UserContext } from '../contexts/userContext'
 import { ArrowLeftIcon } from '@heroicons/react/24/solid'
-
-export type ReadState = 'booksRead' | 'wantsToRead' | 'currentlyReading'
+import { upsertBook } from '../services/books'
+import { ReadState } from '../types/books'
 
 type FormData = {
   readState: ReadState
@@ -32,18 +31,20 @@ export const Volume = () => {
 
   const debouncedUpdateUserBooks = useMemo(() => {
     return debounce(async (readState: ReadState) => {
-      const book = {
-        readState,
-        bookId: volume.id
+      if (user) {
+        const bookDto = {
+          readState: readState,
+          bookId: volume.id,
+          userId: user.id,
+        }
+
+        setLoading(true)
+        await upsertBook(bookDto)
+        setLoading(false)
       }
-      const editUserDto = {
-        books: [],
-      }
-      setLoading(true)
-      await updateUser(editUserDto)
-      setLoading(false)
     }, 500)
-  }, [])
+  }, [user, volume.id])
+
   useEffect(() => {
     if (isValid && !isValidating && data.readState) {
       debouncedUpdateUserBooks(data.readState)
@@ -87,7 +88,7 @@ export const Volume = () => {
             <option value="">Add book to:</option>
             <option value="currentlyReading">Currently reading</option>
             <option value="wantsToRead">Want to read</option>
-            <option value="booksRead">Already read</option>
+            <option value="read">Already read</option>
           </select>
         </fieldset>
       </form>

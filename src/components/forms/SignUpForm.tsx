@@ -52,10 +52,7 @@ export const SignUpForm = () => {
         register={register('password', { required: true })}
         type="password"
       />
-      <PrimaryButton
-        content="create account"
-        disabled={isSubmitting}
-      />
+      <PrimaryButton content="create account" disabled={isSubmitting} />
       <div className="h-5 flex justify-center">
         {errorMessage ? errorMessage : loading ? <CircularProgress /> : <></>}
       </div>
