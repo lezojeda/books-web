@@ -1,6 +1,6 @@
 import { Link, Outlet, useLocation } from 'react-router-dom'
 import { MainPageTitle, SecondaryButton } from '../components/ui'
-import { getToken, TOKEN_ITEM_KEY } from '../utils/auth.utils'
+import { isTokenExpired, TOKEN_ITEM_KEY } from '../utils/auth.utils'
 
 export const Root = () => {
   const location = useLocation()
@@ -25,7 +25,7 @@ export const Root = () => {
       )}
       {location.pathname !== '/auth' && (
         <>
-          {getToken() ? (
+          {!isTokenExpired() ? (
             <SecondaryButton content="Sign out" onClick={signOut} />
           ) : (
             <Link to="auth">Sign in</Link>

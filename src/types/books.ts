@@ -9,4 +9,7 @@ export type Book = {
   bookId: string // The one coming from google books API
   userId: string
   readState: ReadState
+  title?: string
+  publishedDate?: string
+  firstAuthor?: string
 }
