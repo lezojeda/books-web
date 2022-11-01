@@ -13,3 +13,5 @@ export type Book = {
   publishedDate?: string
   firstAuthor?: string
 }
+
+export type BookDto = Omit<Book, 'id'>

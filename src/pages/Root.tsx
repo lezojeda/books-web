@@ -16,7 +16,7 @@ export const Root = () => {
       {location.pathname === '/' && (
         <>
           <MainPageTitle className="mb-2" title="Home" />
-          {getToken() && (
+          {!isTokenExpired() && (
             <Link to="dashboard" style={{ marginBottom: '24px' }}>
               Dashboard
             </Link>

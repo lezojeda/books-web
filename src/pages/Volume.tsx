@@ -8,7 +8,7 @@ import { Volume as VolumeType } from '../types'
 import { UserContext } from '../contexts/userContext'
 import { ArrowLeftIcon } from '@heroicons/react/24/solid'
 import { upsertBook } from '../services/books'
-import { ReadState } from '../types/books'
+import { BookDto, ReadState } from '../types/books'
 
 type FormData = {
   readState: ReadState
@@ -31,19 +31,24 @@ export const Volume = () => {
 
   const debouncedUpdateUserBooks = useMemo(() => {
     return debounce(async (readState: ReadState) => {
-      if (user) {
-        const bookDto = {
+      if (user?.id) {
+        const bookDto: BookDto = {
           readState: readState,
           bookId: volume.id,
           userId: user.id,
         }
+        if (volume.volumeInfo.authors)
+          bookDto.firstAuthor = volume.volumeInfo.authors[0]
+        if (volume.volumeInfo.title) bookDto.title = volume.volumeInfo.title
+        if (volume.volumeInfo.publishedDate)
+          bookDto.publishedDate = volume.volumeInfo.publishedDate
 
         setLoading(true)
         await upsertBook(bookDto)
         setLoading(false)
       }
     }, 500)
-  }, [user, volume.id])
+  }, [user, volume.id, volume.volumeInfo])
 
   useEffect(() => {
     if (isValid && !isValidating && data.readState) {
