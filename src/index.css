@@ -14,6 +14,16 @@ a:hover {
   text-decoration: underline;
 }
 
-input:focus, button:focus  {
+input:focus, button:focus {
   outline: theme('colors.secondary.DEFAULT') solid 2px;
+}
+
+/* Headings */
+h1 {
+  font-size: 1.875rem;
+  line-height: 2.25rem
+}
+
+h2 {
+  font-size: 1.25rem
 }

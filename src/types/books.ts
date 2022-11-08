@@ -1,7 +1,7 @@
 export enum ReadState {
-  read,
-  currentlyReading,
-  wantsToRead,
+  read = 'read',
+  currentlyReading = 'currentlyReading',
+  wantsToRead = 'wantsToRead',
 }
 
 export type Book = {

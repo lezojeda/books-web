@@ -1,9 +1,10 @@
+import classNames from 'classnames'
 import debounce from 'lodash.debounce'
 import { useEffect, useMemo, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { Link } from 'react-router-dom'
 import { searchVolumes } from '../../services/volumes'
-import { Volume } from '../../types'
+import { ClassnameProps, Volume } from '../../types'
 import { SearchInput } from '../forms/inputs/SearchInput'
 import { DropdownList } from './DropdownList'
 
@@ -11,7 +12,7 @@ type FormData = {
   searchValue: string
 }
 
-export const NavbarVolumeSearch = () => {
+export const NavbarVolumeSearch = ({ className }: ClassnameProps) => {
   const {
     register,
     watch,
@@ -44,7 +45,9 @@ export const NavbarVolumeSearch = () => {
   }, [data.searchValue, debouncedGetVolumes])
 
   return (
-    <form className="flex flex-col space-y-2 relative w-96 mx-auto">
+    <form
+      className={classNames('flex flex-col space-y-2 relative w-96', className)}
+    >
       <SearchInput
         className="w-full"
         register={() => register('searchValue')}

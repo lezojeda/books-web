@@ -15,3 +15,17 @@ export const updateUser = async (editUserDto: Partial<User>) => {
     return { error: 'something went wrong!' }
   }
 }
+
+export const getMe = async () => {
+  try {
+    const response = await apiAxiosInstance.get<User>('/users/me')
+
+    return response.data
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      const apiError = error as AxiosError<Error>
+      return apiError.response?.data ?? { message: error.message }
+    }
+    return { error: 'something went wrong!' }
+  }
+}

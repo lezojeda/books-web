@@ -27,8 +27,8 @@ export function SignInForm() {
   const onSubmit = async (data: AuthFormData) => {
     setLoading(true)
     setErrorMessage('')
+
     const signInResponse = await signIn(data.email, data.password)
-    setLoading(false)
     if ('access_token' in signInResponse) {
       const { access_token } = signInResponse
       const userData = getUserDataFromToken(access_token)
@@ -42,6 +42,8 @@ export function SignInForm() {
         setErrorMessage(signInResponse.error)
       }
     }
+
+    setLoading(false)
   }
 
   return (

@@ -7,7 +7,7 @@ type RouteError = {
   message?: string
 }
 
-export const ErrorPage = () => {
+const ErrorPage = () => {
   const error = useRouteError() as RouteError
   console.error(error)
 

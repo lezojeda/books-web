@@ -1,7 +1,7 @@
 import { SignInForm, SignUpForm } from '../components/forms'
 import { MainPageTitle } from '../components/ui'
 
-export const SignIn = () => {
+const SignIn = () => {
   return (
     <div className="w-max mx-auto text-center">
       <MainPageTitle className="mb-4" title="Sign in" />

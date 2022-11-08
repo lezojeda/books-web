@@ -6,7 +6,7 @@ import { loader as VolumeLoader } from './pages/Volume'
 const Root = React.lazy(() => import('./pages/Root'))
 const ErrorPage = React.lazy(() => import('./pages/Error'))
 const Auth = React.lazy(() => import('./pages/Auth'))
-const Dashboard = React.lazy(() => import('./pages/Dashboard'))
+const Dashboard = React.lazy(() => import('./pages/dashboard/Dashboard'))
 const Volume = React.lazy(() => import('./pages/Volume'))
 
 export const rootRouter = createBrowserRouter([
