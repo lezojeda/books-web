@@ -2,7 +2,7 @@ import { describe, test, expect, vi } from 'vitest'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import * as AuthUtils from '../utils/auth.utils'
 import { render, screen } from './utils'
-import ProtectedRoute from '../components/ProtectedRoute'
+import { ProtectedRoute } from '../components/ProtectedRoute'
 
 describe('ProtectedRoute', () => {
   const protectedContent = 'Protected content'

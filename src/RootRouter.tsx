@@ -1,6 +1,6 @@
 import React from 'react'
 import { createBrowserRouter } from 'react-router-dom'
-import ProtectedRoute from './components/ProtectedRoute'
+import { ProtectedRoute } from './components/ProtectedRoute'
 import { loader as VolumeLoader } from './pages/Volume'
 
 const Root = React.lazy(() => import('./pages/Root'))

@@ -23,6 +23,7 @@
     "no-console": 1,
     "linebreak-style": 0,
     "quotes": ["error", "single"],
-    "semi": ["error", "never"]
+    "semi": ["error", "never"],
+    "eol-last": 2
   }
 }
