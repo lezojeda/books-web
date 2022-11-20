@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { apiAxiosInstance } from '../services/axios'
 
 type Parameters = {
-  url: string
+  url: number
   method: string
   data?: any
 }
