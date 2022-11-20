@@ -22,8 +22,8 @@ const Dashboard = () => {
   return (
     <div className="mb-4 flex flex-col justify-center items-center">
       <MainPageTitle className="mb-2 text-center" title="Dashboard" />
-      <NavbarVolumeSearch className='mb-2' />
-      <div className='space-y-4'>
+      <NavbarVolumeSearch className="mb-2" />
+      <div className="space-y-4">
         {readBooks && readBooks.length > 0 && (
           <BookList books={readBooks} title="Read: " />
         )}

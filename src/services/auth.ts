@@ -1,6 +1,6 @@
-import axios, { AxiosError } from 'axios'
-import { Error, User } from '../types'
+import { User } from '../types'
 import { apiAxiosInstance } from './axios'
+import { handleApiError } from './errorHandler'
 
 type SignInResponse = {
   access_token: string
@@ -18,11 +18,7 @@ export const signIn = async (email: string, password: string) => {
 
     return response.data
   } catch (error) {
-    if (axios.isAxiosError(error)) {
-      const apiError = error as AxiosError<Error>
-      return apiError.response?.data ?? { message: error.message }
-    }
-    return { error: 'something went wrong!' }
+    return handleApiError(error)
   }
 }
 
@@ -35,10 +31,6 @@ export const signUp = async (email: string, password: string) => {
 
     return response.data
   } catch (error) {
-    if (axios.isAxiosError(error)) {
-      const apiError = error as AxiosError<Error>
-      return apiError.response?.data ?? { message: error.message }
-    }
-    return { error: 'something went wrong!' }
+    return handleApiError(error)
   }
 }

@@ -1,5 +1,5 @@
 import debounce from 'lodash.debounce'
-import { useContext, useEffect, useMemo, useState } from 'react'
+import { useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { Link, Params, useLoaderData } from 'react-router-dom'
 import { CircularProgress, MainPageTitle } from '../components/ui'
@@ -20,15 +20,22 @@ export async function loader({ params }: { params: Params<any> }) {
 }
 
 export const Volume = () => {
-  const { user } = useContext(UserContext)
+  const { user, setUser } = useContext(UserContext)
   const {
     register,
     watch,
-    formState: { isValid, isValidating },
+    formState: { isValid, isValidating, isDirty },
   } = useForm<FormData>()
   const [loading, setLoading] = useState(false)
   const volume = useLoaderData() as VolumeType
   const data = watch()
+
+  const updateUserBooks = useCallback(async () => {
+    const getMeResponse = await getMe()
+    if (getMeResponse.status === 200 && 'books' in getMeResponse.data) {
+      setUser && setUser(getMeResponse.data)
+    }
+  }, [setUser])
 
   const debouncedUpdateUserBooks = useMemo(() => {
     return debounce(async (readState: ReadState) => {
@@ -45,32 +52,43 @@ export const Volume = () => {
           bookDto.publishedDate = volume.volumeInfo.publishedDate
 
         setLoading(true)
-        await upsertBook(bookDto)
-        const updatedUser = await getMe()
-        console.log(updatedUser)
-        // call /me and update context with new books
+        await new Promise<void>((resolve) => setTimeout(() => resolve(), 2000))
+        const response = await upsertBook(bookDto)
+
+        if (response.status === 200) {
+          updateUserBooks()
+        }
         setLoading(false)
       }
     }, 500)
-  }, [user, volume.id, volume.volumeInfo])
+  }, [
+    updateUserBooks,
+    user?.id,
+    volume.id,
+    volume.volumeInfo.authors,
+    volume.volumeInfo.publishedDate,
+    volume.volumeInfo.title,
+  ])
 
   const selectedDefaultValue = useMemo(() => {
-    const bookInUser = user?.books.find((book) => book.bookId === volume.id)
-    if (bookInUser) return bookInUser.readState
+    const bookFromUserBooks = user?.books.find(
+      (book) => book.bookId === volume.id
+    )
+    if (bookFromUserBooks) return bookFromUserBooks.readState
   }, [user?.books, volume.id])
 
   useEffect(() => {
-    if (isValid && !isValidating && data.readState) {
+    if (isDirty && isValid && !isValidating && data.readState) {
       debouncedUpdateUserBooks(data.readState)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data.readState, debouncedUpdateUserBooks])
 
   return (
-    <div className="text-center space-y-2">
+    <div className="text-center space-y-2 flex flex-col items-center">
       <div className="relative w-1/2 mx-auto">
         <Link
-          className="absolute left-0 w-8 mr-4 hover:opacity-70 cursor-pointer"
+          className="absolute -left-10 top-1 w-8 mr-4 hover:opacity-70 cursor-pointer"
           to="/dashboard"
         >
           <ArrowLeftIcon />
@@ -86,7 +104,7 @@ export const Volume = () => {
           )}
         </div>
       </div>
-      <form className="flex flex-col justify-center items-center">
+      <form className="relative">
         <fieldset className="mb-2">
           <legend className="hidden">Add book to:</legend>
           <select
@@ -100,11 +118,10 @@ export const Volume = () => {
             <option value="read">Already read</option>
           </select>
         </fieldset>
-        <div className='h-4'>
-
-        <CircularProgress
-          className={classNames('w-4 h-4', loading ? 'visible' : 'hidden')}
-        />
+        <div className="h-4 absolute top-0 -right-8">
+          <CircularProgress
+            className={classNames('w-4 h-4', loading ? 'visible' : 'hidden')}
+          />
         </div>
       </form>
     </div>

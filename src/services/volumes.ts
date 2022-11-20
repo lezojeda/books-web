@@ -1,6 +1,6 @@
-import axios, { AxiosError } from 'axios'
-import { Collection, Error, Volume } from '../types'
+import { Collection, Volume } from '../types'
 import { googleBooksApiInstance } from './axios'
+import { handleApiError } from './errorHandler'
 
 export const searchVolumes = async (searchValue: string) => {
   try {
@@ -10,11 +10,7 @@ export const searchVolumes = async (searchValue: string) => {
 
     return response.data
   } catch (error) {
-    if (axios.isAxiosError(error)) {
-      const apiError = error as AxiosError<Error>
-      return apiError.response?.data ?? { message: error.message }
-    }
-    return { error: 'something went wrong!' }
+    return handleApiError(error)
   }
 }
 
@@ -26,10 +22,6 @@ export const getVolume = async (volumeId?: string) => {
 
     return response.data
   } catch (error) {
-    if (axios.isAxiosError(error)) {
-      const apiError = error as AxiosError<Error>
-      return apiError.response?.data ?? { message: error.message }
-    }
-    return { error: 'something went wrong!' }
+    return handleApiError(error)
   }
 }

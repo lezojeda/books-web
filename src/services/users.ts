@@ -1,31 +1,19 @@
-import axios, { AxiosError } from 'axios'
 import { User } from '../types'
 import { apiAxiosInstance } from './axios'
+import { handleApiError } from './errorHandler'
 
 export const updateUser = async (editUserDto: Partial<User>) => {
   try {
-    const response = await apiAxiosInstance.put<User>('/users', editUserDto)
-
-    return response.data
+    return await apiAxiosInstance.put<User>('/users', editUserDto)
   } catch (error) {
-    if (axios.isAxiosError(error)) {
-      const apiError = error as AxiosError<Error>
-      return apiError.response?.data ?? { message: error.message }
-    }
-    return { error: 'something went wrong!' }
+    return handleApiError(error)
   }
 }
 
 export const getMe = async () => {
   try {
-    const response = await apiAxiosInstance.get<User>('/users/me')
-
-    return response.data
+    return await apiAxiosInstance.get<User>('/users/me')
   } catch (error) {
-    if (axios.isAxiosError(error)) {
-      const apiError = error as AxiosError<Error>
-      return apiError.response?.data ?? { message: error.message }
-    }
-    return { error: 'something went wrong!' }
+    return handleApiError(error)
   }
 }
