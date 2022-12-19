@@ -76,6 +76,9 @@ export const NavbarVolumeSearch = ({ className }: ClassnameProps) => {
               </Link>
             </li>
           ))}
+          {!loading && (
+            <Link to="/search">See all results for {data.searchValue}</Link>
+          )}
         </DropdownList>
       )}
     </form>

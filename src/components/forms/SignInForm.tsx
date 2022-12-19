@@ -36,11 +36,7 @@ export function SignInForm() {
       setToken(access_token)
       navigate(from, { replace: true })
     } else {
-      if ('message' in signInResponse) {
-        setErrorMessage(signInResponse.message)
-      } else {
-        setErrorMessage(signInResponse.error)
-      }
+      setErrorMessage(signInResponse.message)
     }
 
     setLoading(false)

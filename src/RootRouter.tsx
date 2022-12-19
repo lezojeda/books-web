@@ -1,6 +1,7 @@
 import React from 'react'
 import { createBrowserRouter } from 'react-router-dom'
 import { ProtectedRoute } from './components/ProtectedRoute'
+import BookSearchResults from './pages/BookSearchResults'
 import { loader as VolumeLoader } from './pages/Volume'
 
 const Root = React.lazy(() => import('./pages/Root'))
@@ -35,6 +36,14 @@ export const rootRouter = createBrowserRouter([
           </ProtectedRoute>
         ),
         loader: VolumeLoader,
+      },
+      {
+        path: 'search',
+        element: (
+          <ProtectedRoute>
+            <BookSearchResults />
+          </ProtectedRoute>
+        ),
       },
     ],
   },
