@@ -10,9 +10,7 @@ export const Root = () => {
   }
   return (
     <>
-      <div className="mb-4 w-full">
-        <Outlet />{' '}
-      </div>
+      <Outlet />{' '}
       {location.pathname === '/' && (
         <>
           <MainPageTitle className="mb-2" title="Home" />

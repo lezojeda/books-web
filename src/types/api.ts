@@ -7,5 +7,5 @@ export type Error = {
 export type Collection<ItemType> = {
   kind: string
   totalItems: number
-  items: ItemType[]
+  items?: ItemType[]
 }

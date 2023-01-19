@@ -1,9 +1,8 @@
 import debounce from 'lodash.debounce'
 import { useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { useForm } from 'react-hook-form'
-import { Link, Params, useLoaderData } from 'react-router-dom'
+import { useLoaderData, useNavigate } from 'react-router-dom'
 import { CircularProgress, MainPageTitle } from '../components/ui'
-import { getVolume } from '../services/volumes'
 import { BookDto, ReadState, Volume as VolumeType } from '../types'
 import { UserContext } from '../contexts/userContext'
 import { ArrowLeftIcon } from '@heroicons/react/24/solid'
@@ -11,37 +10,25 @@ import { upsertBook } from '../services/books'
 import classNames from 'classnames'
 import { getMe } from '../services/users'
 
-type FormData = {
-  readState: ReadState
-}
-
-export async function loader({ params }: { params: Params<any> }) {
-  return getVolume(params.volumeId)
-}
-
 export const Volume = () => {
   const { user, setUser } = useContext(UserContext)
   const {
     register,
     watch,
     formState: { isValid, isValidating, isDirty },
-  } = useForm<FormData>()
+  } = useForm<{
+    readState: ReadState
+  }>()
   const [loading, setLoading] = useState(false)
   const volume = useLoaderData() as VolumeType
   const data = watch()
+  const navigate = useNavigate()
 
-  const updateUserBooks = useCallback(async () => {
-    const getMeResponse = await getMe()
-    if (getMeResponse.status === 200 && 'books' in getMeResponse.data) {
-      setUser && setUser(getMeResponse.data)
-    }
-  }, [setUser])
-
-  const debouncedUpdateUserBooks = useMemo(() => {
-    return debounce(async (readState: ReadState) => {
+  const prepareBookDto = useCallback(
+    (readState: ReadState) => {
       if (user?.id) {
         const bookDto: BookDto = {
-          readState: readState,
+          readState,
           bookId: volume.id,
           userId: user.id,
         }
@@ -50,25 +37,49 @@ export const Volume = () => {
         if (volume.volumeInfo.title) bookDto.title = volume.volumeInfo.title
         if (volume.volumeInfo.publishedDate)
           bookDto.publishedDate = volume.volumeInfo.publishedDate
+        return bookDto
+      }
+    },
+    [
+      user?.id,
+      volume.id,
+      volume.volumeInfo.authors,
+      volume.volumeInfo.publishedDate,
+      volume.volumeInfo.title,
+    ]
+  )
 
+  const updateUserBooks = useCallback(async () => {
+    const getMeResponse = await getMe()
+
+    if (getMeResponse) {
+      if (
+        getMeResponse.status === 200 &&
+        'data' in getMeResponse &&
+        'books' in getMeResponse.data
+      ) {
+        setUser && setUser(getMeResponse.data)
+      }
+    }
+  }, [setUser])
+
+  const debouncedUpdateUserBooks = useMemo(() => {
+    return debounce(async (readState: ReadState) => {
+      const bookDto = prepareBookDto(readState)
+
+      if (bookDto) {
         setLoading(true)
-        await new Promise<void>((resolve) => setTimeout(() => resolve(), 2000))
         const response = await upsertBook(bookDto)
 
-        if (response.status === 200) {
-          updateUserBooks()
+        if (response) {
+          if (response.status === 200) {
+            updateUserBooks()
+          }
         }
         setLoading(false)
       }
     }, 500)
-  }, [
-    updateUserBooks,
-    user?.id,
-    volume.id,
-    volume.volumeInfo.authors,
-    volume.volumeInfo.publishedDate,
-    volume.volumeInfo.title,
-  ])
+  }, [prepareBookDto, updateUserBooks])
 
   const selectedDefaultValue = useMemo(() => {
     const bookFromUserBooks = user?.books.find(
@@ -87,12 +98,12 @@ export const Volume = () => {
   return (
     <div className="text-center space-y-2 flex flex-col items-center">
       <div className="relative w-1/2 mx-auto">
-        <Link
+        <div
           className="absolute -left-10 top-1 w-8 mr-4 hover:opacity-70 cursor-pointer"
-          to="/dashboard"
+          onClick={() => navigate(-1)}
         >
           <ArrowLeftIcon />
-        </Link>
+        </div>
         <div className="mx-auto">
           <MainPageTitle title={volume.volumeInfo.title} />
           {volume.volumeInfo.authors &&

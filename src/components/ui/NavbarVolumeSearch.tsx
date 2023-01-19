@@ -5,19 +5,17 @@ import { useForm } from 'react-hook-form'
 import { Link } from 'react-router-dom'
 import { searchVolumes } from '../../services/volumes'
 import { ClassnameProps, Volume } from '../../types'
-import { SearchInput } from '../forms/inputs/SearchInput'
+import { BookSearchInput } from '../forms/inputs/BookSearchInput'
 import { DropdownList } from './DropdownList'
-
-type FormData = {
-  searchValue: string
-}
 
 export const NavbarVolumeSearch = ({ className }: ClassnameProps) => {
   const {
     register,
     watch,
     formState: { isValid, isValidating },
-  } = useForm<FormData>({
+  } = useForm<{
+    searchValue: string
+  }>({
     mode: 'onChange',
   })
   const [volumes, setVolumes] = useState<Volume[]>()
@@ -31,7 +29,7 @@ export const NavbarVolumeSearch = ({ className }: ClassnameProps) => {
       setVolumes(undefined)
       const response = await searchVolumes(searchValue)
       setLoading(false)
-      if ('items' in response) setVolumes(response.items)
+      if (response && 'items' in response) setVolumes(response.items)
     }, 500)
   }, [])
 
@@ -48,17 +46,15 @@ export const NavbarVolumeSearch = ({ className }: ClassnameProps) => {
     <form
       className={classNames('flex flex-col space-y-2 relative w-96', className)}
     >
-      <SearchInput
-        className="w-full"
-        register={() => register('searchValue')}
-      />
+      <BookSearchInput className="w-full" register={register('searchValue')} />
       {showDropdown && (
+        <>
         <DropdownList loading={loading} setShowDropdownList={setShowDropdown}>
           {volumes?.map((v: Volume, i: number) => (
             <li
               key={v.id}
-              className={`w-full cursor-pointer hover:bg-backgroundColor ${
-                i === volumes.length - 1 ? '' : 'border-b'
+              className={`w-full cursor-pointer hover:bg-backgroundColor p-2 ${
+                i === volumes.length - 1 ? 'border-b-4' : 'border-b'
               }`}
             >
               <Link
@@ -66,7 +62,6 @@ export const NavbarVolumeSearch = ({ className }: ClassnameProps) => {
                 style={{
                   display: 'inline-block',
                   height: '100%',
-                  padding: '4px 0',
                   width: '100%',
                 }}
               >
@@ -77,9 +72,15 @@ export const NavbarVolumeSearch = ({ className }: ClassnameProps) => {
             </li>
           ))}
           {!loading && (
-            <Link to="/search">See all results for {data.searchValue}</Link>
+            <Link
+              style={{ padding: 4, fontSize: '18px'}}
+              to={`/search?q=${data.searchValue}`}
+            >
+              See all results for &quot;{data.searchValue}&quot;
+            </Link>
           )}
         </DropdownList>
+        </>
       )}
     </form>
   )

@@ -2,7 +2,7 @@ import { Book } from '../../types'
 
 const UserBookList = ({ books, title }: { books: Book[]; title: string }) => {
   return (
-    <div>
+    <>
       <h2 className="text-center font-medium">{title}</h2>
       <ul className="flex flex-col items-center">
         {books.map((book) => {
@@ -14,7 +14,7 @@ const UserBookList = ({ books, title }: { books: Book[]; title: string }) => {
           )
         })}
       </ul>
-    </div>
+    </>
   )
 }
 

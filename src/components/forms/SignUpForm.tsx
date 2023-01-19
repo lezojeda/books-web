@@ -26,13 +26,15 @@ export const SignUpForm = () => {
     setErrorMessage('')
     const signInResponse = await signUp(data.email, data.password)
     setLoading(false)
-    if ('access_token' in signInResponse) {
-      navigate(from, { replace: true })
-    } else {
-      if ('message' in signInResponse) {
-        setErrorMessage(signInResponse.message)
-      } else if ('error' in signInResponse) {
-        setErrorMessage(signInResponse.error)
+    if (signInResponse) {
+      if ('id' in signInResponse) {
+        navigate(from, { replace: true })
+      } else {
+        if ('data' in signInResponse) {
+          setErrorMessage(signInResponse.data.message)
+        } else {
+          setErrorMessage(signInResponse.message)
+        }
       }
     }
   }

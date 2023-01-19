@@ -30,7 +30,7 @@ export type Volume = {
       containsEpubBubbles: boolean
       containsImageBubbles: boolean
     }
-    imageLinks: {
+    imageLinks?: {
       smallThumbnail: string
       thumbnail: string
     }

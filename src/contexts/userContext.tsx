@@ -1,10 +1,7 @@
 import React, { useEffect, useState } from 'react'
+import { getMe } from '../services/users'
 import { User } from '../types/users'
-import {
-  getToken,
-  getUserDataFromToken,
-  isAuthenticated,
-} from '../utils/auth.utils'
+import { isAuthenticated, removeToken } from '../utils/auth.utils'
 
 export type UserContextType = Pick<User, 'email' | 'books' | 'id'>
 
@@ -21,12 +18,24 @@ export const UserContext = React.createContext<UserContext>({
 export const UserProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<UserContextType>()
 
+  const getAndSetUserData = async () => {
+    const getMeResponse = await getMe()
+
+    if (
+      getMeResponse &&
+      getMeResponse.status === 200 &&
+      'data' in getMeResponse &&
+      'books' in getMeResponse.data
+    ) {
+      setUser && setUser(getMeResponse.data)
+    } else {
+      removeToken()
+    }
+  }
+
   useEffect(() => {
     if (isAuthenticated()) {
-      const sessionData = getUserDataFromToken(getToken() || '')
-      if (sessionData) {
-        setUser && setUser(sessionData)
-      }
+      getAndSetUserData()
     }
   }, [])
 

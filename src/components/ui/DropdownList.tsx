@@ -18,7 +18,7 @@ export const DropdownList = ({
 
   return (
     <ul
-      className="overflow-scroll h-80 absolute top-14 bg-white border p-1 w-full flex flex-col items-center"
+      className="overflow-scroll h-80 absolute top-14 bg-white border w-full flex flex-col items-center"
       ref={dropdownRef}
     >
       {loading && (

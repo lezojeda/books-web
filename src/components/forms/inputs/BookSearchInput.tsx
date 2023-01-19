@@ -1,13 +1,13 @@
 import classNames from 'classnames'
-import { RegisterOptions, UseFormRegisterReturn } from 'react-hook-form'
+import { UseFormRegisterReturn } from 'react-hook-form'
 import { TextInput } from './TextInput'
 
-export const SearchInput = ({
+export const BookSearchInput = ({
   className,
   register,
 }: {
   className?: string
-  register: (name: string, options?: RegisterOptions) => UseFormRegisterReturn
+  register: UseFormRegisterReturn
 }) => {
   return (
     <TextInput
@@ -15,7 +15,7 @@ export const SearchInput = ({
       id="search"
       label="Search books:"
       placeholder="Search by author, book name..."
-      register={register('search')}
+      register={register}
     />
   )
 }

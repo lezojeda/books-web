@@ -29,14 +29,17 @@ export function SignInForm() {
     setErrorMessage('')
 
     const signInResponse = await signIn(data.email, data.password)
-    if ('access_token' in signInResponse) {
-      const { access_token } = signInResponse
-      const userData = getUserDataFromToken(access_token)
-      setUser && userData && setUser(userData)
-      setToken(access_token)
-      navigate(from, { replace: true })
-    } else {
-      setErrorMessage(signInResponse.message)
+
+    if (signInResponse) {
+      if ('access_token' in signInResponse) {
+        const { access_token } = signInResponse
+        const userData = getUserDataFromToken(access_token)
+        setUser && userData && setUser(userData)
+        setToken(access_token)
+        navigate(from, { replace: true })
+      } else if ('data' in signInResponse) {
+        setErrorMessage(signInResponse.data.message)
+      }
     }
 
     setLoading(false)

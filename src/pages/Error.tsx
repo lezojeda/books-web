@@ -9,7 +9,7 @@ type RouteError = {
 
 const ErrorPage = () => {
   const error = useRouteError() as RouteError
-  console.error(error)
+  console.error(error) // eslint-disable-line no-console
 
   return (
     <>

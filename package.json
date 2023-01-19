@@ -3,11 +3,12 @@
   "private": true,
   "version": "0.0.0",
   "scripts": {
-    "dev": "npx tailwindcss -i ./src/index.css -o ./dist/output.css --watch & vite",
-    "vite": "vite",
     "build": "tsc && vite build",
+    "dev": "npx tailwindcss -i ./src/index.css -o ./dist/output.css --watch & vite",
+    "format": "npx prettier --write .",
+    "lint": "eslint ./src --ext .ts,.tsx",
     "preview": "vite preview",
-    "format": "npx prettier --write ."
+    "vite": "vite"
   },
   "dependencies": {
     "@heroicons/react": "^2.0.12",

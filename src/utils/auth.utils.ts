@@ -37,6 +37,8 @@ export const setToken = (token: string) =>
 
 export const getToken = () => localStorage.getItem(TOKEN_ITEM_KEY)
 
+export const removeToken = () => localStorage.removeItem(TOKEN_ITEM_KEY)
+
 export const isTokenExpired = (): boolean => {
   const token = getToken()
 

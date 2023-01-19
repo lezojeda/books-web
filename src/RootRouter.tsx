@@ -1,14 +1,33 @@
 import React from 'react'
-import { createBrowserRouter } from 'react-router-dom'
+import { createBrowserRouter, Params } from 'react-router-dom'
 import { ProtectedRoute } from './components/ProtectedRoute'
-import BookSearchResults from './pages/BookSearchResults'
-import { loader as VolumeLoader } from './pages/Volume'
+import BookSearchResults from './pages/bookSearchResultsList/BookSearchResults'
+import { getVolume, searchVolumes } from './services/volumes'
 
 const Root = React.lazy(() => import('./pages/Root'))
 const ErrorPage = React.lazy(() => import('./pages/Error'))
 const Auth = React.lazy(() => import('./pages/Auth'))
 const Dashboard = React.lazy(() => import('./pages/dashboard/Dashboard'))
 const Volume = React.lazy(() => import('./pages/Volume'))
+
+export const VolumeLoader = async ({
+  params,
+}: {
+  params: Params<'volumeId'>
+}) => {
+  return getVolume(params.volumeId)
+}
+
+export const BookSearchResultsLoader = async ({
+  request,
+}: {
+  request: { url: string }
+}) => {
+  const url = new URL(request.url)
+  const searchValue = url.searchParams.get('q')
+  const startIndex = Number(url.searchParams.get('startIndex'))
+  return searchVolumes(searchValue ?? '', startIndex ?? 0, 20)
+}
 
 export const rootRouter = createBrowserRouter([
   {
@@ -17,33 +36,34 @@ export const rootRouter = createBrowserRouter([
     errorElement: <ErrorPage />,
     children: [
       {
-        path: 'auth',
         element: <Auth />,
+        path: 'auth',
       },
       {
-        path: 'dashboard',
         element: (
           <ProtectedRoute>
             <Dashboard />
           </ProtectedRoute>
         ),
+        path: 'dashboard',
       },
       {
-        path: 'volumes/:volumeId',
         element: (
           <ProtectedRoute>
             <Volume />
           </ProtectedRoute>
         ),
         loader: VolumeLoader,
+        path: 'volumes/:volumeId',
       },
       {
-        path: 'search',
         element: (
           <ProtectedRoute>
             <BookSearchResults />
           </ProtectedRoute>
         ),
+        loader: BookSearchResultsLoader,
+        path: 'search',
       },
     ],
   },
