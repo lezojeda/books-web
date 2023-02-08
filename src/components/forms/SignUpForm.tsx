@@ -13,7 +13,6 @@ export const SignUpForm = () => {
     formState: { isSubmitting },
   } = useForm<AuthFormData>()
   const [errorMessage, setErrorMessage] = useState<string>()
-  const [loading, setLoading] = useState(false)
   const navigate = useNavigate()
 
   // Get the previous user's location to redirect them after login
@@ -22,10 +21,8 @@ export const SignUpForm = () => {
     from = locationState?.from?.pathname || '/'
 
   const onSubmit = async (data: AuthFormData) => {
-    setLoading(true)
     setErrorMessage('')
     const signInResponse = await signUp(data.email, data.password)
-    setLoading(false)
     if ('data' in signInResponse) {
       const { data } = signInResponse
       if ('id' in data) {
@@ -55,7 +52,7 @@ export const SignUpForm = () => {
       />
       <PrimaryButton content="create account" disabled={isSubmitting} />
       <div className="h-5 flex justify-center">
-        {errorMessage ? errorMessage : loading ? <CircularProgress /> : <></>}
+        {errorMessage ? errorMessage : isSubmitting ? <CircularProgress /> : <></>}
       </div>
     </form>
   )

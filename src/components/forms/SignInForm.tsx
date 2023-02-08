@@ -15,7 +15,6 @@ export function SignInForm() {
     formState: { isSubmitting },
   } = useForm<AuthFormData>()
   const [errorMessage, setErrorMessage] = useState<string>()
-  const [loading, setLoading] = useState(false)
   const { setUser } = useContext(UserContext)
   const navigate = useNavigate()
 
@@ -25,9 +24,7 @@ export function SignInForm() {
     from = locationState?.from?.pathname || '/dashboard'
 
   const onSubmit = async (data: AuthFormData) => {
-    setLoading(true)
     setErrorMessage('')
-
     const signInResponse = await signIn(data.email, data.password)
 
     if ('data' in signInResponse && signInResponse.data !== undefined) {
@@ -44,8 +41,6 @@ export function SignInForm() {
     } else if ('message' in signInResponse) {
       setErrorMessage(signInResponse.message)
     }
-
-    setLoading(false)
   }
 
   return (
@@ -64,11 +59,15 @@ export function SignInForm() {
         register={register('password', { required: true })}
         type="password"
       />
-      <PrimaryButton content="sign in" disabled={isSubmitting}>
-        sign in
-      </PrimaryButton>
+      <PrimaryButton content="sign in" disabled={isSubmitting} />
       <div className="h-5 flex justify-center">
-        {errorMessage ? errorMessage : loading ? <CircularProgress /> : <></>}
+        {errorMessage ? (
+          errorMessage
+        ) : isSubmitting ? (
+          <CircularProgress />
+        ) : (
+          <></>
+        )}
       </div>
     </form>
   )

@@ -1,11 +1,33 @@
 import { describe, test, vi } from 'vitest'
 import { SignInForm } from '../components/forms'
-import { act, fireEvent, renderWithRouter } from './utils'
+import { renderWithRouter, userEvent, waitFor } from './utils'
 import * as auth from '../services/auth'
 import { UserContext } from '../contexts/userContext'
+import { Route, Routes } from 'react-router-dom'
+
+function buildAxiosResponse(overrides: any) {
+  return {
+    headers: {},
+    config: {},
+    name: '',
+    message: '',
+    ...overrides,
+  }
+}
+
+const access_token =
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyLCJlbWFpbCI6Imxlem9qZWRhQGdtYWlsLmNvbSIsImlkIjoyfQ.E-WaZwcFrLuYu3CjLXO32NiGsCjg9WTzPa4CG2cv63c'
+const mockSuccessfulSignInResponse = buildAxiosResponse({
+  data: {
+    access_token,
+  },
+  status: 200,
+  statusText: 'OK',
+})
 
 describe('SignInForm', () => {
   beforeEach(() => {
+    window.history.pushState({}, '', '/')
     vi.clearAllMocks()
   })
 
@@ -19,56 +41,61 @@ describe('SignInForm', () => {
     expect(passwordInput).toBeVisible()
   })
 
-  it('should display an error message when sign in fails', async () => {
-    const mockAxiosResponse = {
+  test('should display an error message when sign in fails', async () => {
+    const mockAxiosResponse = buildAxiosResponse({
       data: { message: 'Credentials incorrect' },
       status: 403,
       statusText: 'FORBBIDEN',
-      headers: {},
-      config: {},
-      name: '',
-      message: '',
-    }
-
-    vi.spyOn(auth, 'signIn').mockResolvedValue(mockAxiosResponse)
-
-    const { getByText, getByLabelText } = renderWithRouter(<SignInForm />)
-    const emailInput = getByLabelText(/E-mail/i)
-    const passwordInput = getByLabelText(/password/i)
-    const submitButton = getByText(/sign in/i)
-
-    fireEvent.change(emailInput, { target: { value: 'test@example.com' } })
-    fireEvent.change(passwordInput, { target: { value: 'password' } })
-
-    await act(async () => {
-      fireEvent.click(submitButton)
     })
 
-    const errorMessage = getByText(/Credentials incorrect/i)
+    vi.spyOn(auth, 'signIn').mockResolvedValueOnce(mockAxiosResponse)
+
+    const { findByText, getByText, getByLabelText } = renderWithRouter(
+      <SignInForm />
+    )
+    const emailInput = getByLabelText(/E-mail/i)
+    const passwordInput = getByLabelText(/Password/i)
+    const submitButton = getByText(/sign in/i)
+
+    await userEvent.type(emailInput, 'test@example.com')
+    await userEvent.type(passwordInput, 'password')
+
+    await userEvent.click(submitButton)
+
+    const errorMessage = await findByText(/Credentials incorrect/i)
 
     expect(errorMessage).toBeInTheDocument()
   })
 
-  it('should set user data when sign in is successful', async () => {
-    const mockAxiosResponse = {
-      data: {
-        access_token:
-          'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyLCJlbWFpbCI6Imxlem9qZWRhQGdtYWlsLmNvbSIsImlkIjoyfQ.E-WaZwcFrLuYu3CjLXO32NiGsCjg9WTzPa4CG2cv63c',
-      },
-      status: 200,
-      statusText: 'OK',
-      headers: {},
-      config: {},
-      name: '',
-      message: '',
-    }
+  test('should disable sign in button while submitting', async () => {
+    const { getByText, getByLabelText } = renderWithRouter(<SignInForm />)
+
+    const emailInput = getByLabelText(/E-mail/i)
+    const passwordInput = getByLabelText(/password/i)
+    const submitButton = getByText(/sign in/i)
+
+    expect(submitButton).not.toBeDisabled()
+
+    await userEvent.type(emailInput, 'test@example.com')
+    await userEvent.type(passwordInput, 'testpassword')
+
+    await userEvent.click(submitButton)
+
+    expect(submitButton).toBeDisabled()
+
+    await waitFor(() => {
+      expect(submitButton).not.toBeDisabled()
+    })
+  })
+
+  test('should set user data when sign in is successful', async () => {
     const userData = {
       email: 'lezojeda@gmail.com',
       id: 2,
-      books: undefined
+      books: undefined,
     }
 
-    vi.spyOn(auth, 'signIn').mockResolvedValue(mockAxiosResponse)
+    vi.spyOn(auth, 'signIn').mockResolvedValueOnce(mockSuccessfulSignInResponse)
     const setUser = vi.fn()
 
     const { getByText, getByLabelText } = renderWithRouter(
@@ -80,13 +107,37 @@ describe('SignInForm', () => {
     const passwordInput = getByLabelText(/password/i)
     const submitButton = getByText(/sign in/i)
 
-    fireEvent.change(emailInput, { target: { value: 'test@example.com' } })
-    fireEvent.change(passwordInput, { target: { value: 'password' } })
+    await userEvent.type(emailInput, 'test@example.com')
+    await userEvent.type(passwordInput, 'password')
 
-    await act(async () => {
-      fireEvent.click(submitButton)
+    await userEvent.click(submitButton)
+
+    await waitFor(() => {
+      expect(setUser).toHaveBeenCalledWith(userData)
     })
+  })
 
-    expect(setUser).toHaveBeenCalledWith(userData)
+  test('should navigate to dashboard after successful sign in', async () => {
+    const { getByText, getByLabelText } = renderWithRouter(
+      <Routes>
+        <Route element={<SignInForm />} path="/"></Route>
+        <Route element={<>Dashboard</>} path="/dashboard"></Route>
+      </Routes>
+    )
+
+    vi.spyOn(auth, 'signIn').mockResolvedValueOnce(mockSuccessfulSignInResponse)
+
+    const emailInput = getByLabelText(/E-mail/i)
+    const passwordInput = getByLabelText(/password/i)
+    const submitButton = getByText(/sign in/i)
+
+    await userEvent.type(emailInput, 'test@example.com')
+    await userEvent.type(passwordInput, 'password')
+
+    await userEvent.click(submitButton)
+
+    await waitFor(() => {
+      expect(getByText('Dashboard')).toBeVisible()
+    })
   })
 })

@@ -10,7 +10,7 @@ afterEach(() => {
 const renderWithRouter = (ui: React.ReactElement, options = {}) =>
   render(ui, {
     // wrap provider(s) here if needed
-    wrapper: ({ children }) => <BrowserRouter>{children}</BrowserRouter>,
+    wrapper: BrowserRouter,
     ...options,
   })
 
