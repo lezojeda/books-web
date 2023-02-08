@@ -25,6 +25,7 @@ export const TextInput = ({
           className,
           'border border-primary-light rounded p-1'
         )}
+        id={id}
         placeholder={placeholder}
         type={type}
         {...register}

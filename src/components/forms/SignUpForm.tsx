@@ -26,30 +26,29 @@ export const SignUpForm = () => {
     setErrorMessage('')
     const signInResponse = await signUp(data.email, data.password)
     setLoading(false)
-    if (signInResponse) {
-      if ('id' in signInResponse) {
+    if ('data' in signInResponse) {
+      const { data } = signInResponse
+      if ('id' in data) {
         navigate(from, { replace: true })
-      } else {
-        if ('data' in signInResponse) {
-          setErrorMessage(signInResponse.data.message)
-        } else {
-          setErrorMessage(signInResponse.message)
-        }
+      } else if ('message' in data) {
+        setErrorMessage(data.message)
       }
     }
+    if ('message' in signInResponse) setErrorMessage(signInResponse.message)
   }
+
   return (
     <form
       className="w-full justify-center items-center flex flex-col space-y-2"
       onSubmit={handleSubmit(onSubmit)}
     >
       <TextInput
-        id="email"
+        id="signup-email"
         label="E-mail"
         register={register('email', { required: true })}
       />
       <TextInput
-        id="password"
+        id="signup-password"
         label="Password"
         register={register('password', { required: true })}
         type="password"

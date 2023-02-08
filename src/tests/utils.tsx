@@ -1,4 +1,5 @@
 import { cleanup, render } from '@testing-library/react'
+import { BrowserRouter } from 'react-router-dom'
 import { afterEach, vi } from 'vitest'
 
 afterEach(() => {
@@ -6,14 +7,14 @@ afterEach(() => {
   vi.resetModules()
 })
 
-const customRender = (ui: React.ReactElement, options = {}) =>
+const renderWithRouter = (ui: React.ReactElement, options = {}) =>
   render(ui, {
     // wrap provider(s) here if needed
-    wrapper: ({ children }) => children,
+    wrapper: ({ children }) => <BrowserRouter>{children}</BrowserRouter>,
     ...options,
   })
 
 export * from '@testing-library/react'
 export { default as userEvent } from '@testing-library/user-event'
-// override render export
-export { customRender as render }
+
+export { renderWithRouter }

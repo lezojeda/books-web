@@ -1,4 +1,4 @@
-import { User } from '../types'
+import { ApiResponse, User } from '../types'
 import { apiAxiosInstance } from './axios'
 import { handleApiError } from './errorHandler'
 
@@ -6,17 +6,15 @@ type SignInResponse = {
   access_token: string
 }
 
-export const signIn = async (email: string, password: string) => {
+export const signIn = async (
+  email: string,
+  password: string
+): Promise<ApiResponse<SignInResponse>> => {
   try {
-    const response = await apiAxiosInstance.post<SignInResponse>(
-      '/auth/signin',
-      {
-        email,
-        password,
-      }
-    )
-
-    return response.data
+    return await apiAxiosInstance.post<SignInResponse>('/auth/signin', {
+      email,
+      password,
+    })
   } catch (error) {
     return handleApiError(error)
   }
@@ -24,12 +22,10 @@ export const signIn = async (email: string, password: string) => {
 
 export const signUp = async (email: string, password: string) => {
   try {
-    const response = await apiAxiosInstance.post<User>('/auth/signup', {
+    return await apiAxiosInstance.post<User>('/auth/signup', {
       email,
       password,
     })
-
-    return response.data
   } catch (error) {
     return handleApiError(error)
   }

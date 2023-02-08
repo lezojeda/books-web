@@ -30,16 +30,19 @@ export function SignInForm() {
 
     const signInResponse = await signIn(data.email, data.password)
 
-    if (signInResponse) {
-      if ('access_token' in signInResponse) {
-        const { access_token } = signInResponse
+    if ('data' in signInResponse && signInResponse.data !== undefined) {
+      const { data } = signInResponse
+      if ('access_token' in data) {
+        const { access_token } = data
         const userData = getUserDataFromToken(access_token)
         setUser && userData && setUser(userData)
         setToken(access_token)
         navigate(from, { replace: true })
-      } else if ('data' in signInResponse) {
-        setErrorMessage(signInResponse.data.message)
+      } else if ('message' in data) {
+        setErrorMessage(data.message)
       }
+    } else if ('message' in signInResponse) {
+      setErrorMessage(signInResponse.message)
     }
 
     setLoading(false)
@@ -51,12 +54,12 @@ export function SignInForm() {
       onSubmit={handleSubmit(onSubmit)}
     >
       <TextInput
-        id="email"
+        id="signin-email"
         label="E-mail"
         register={register('email', { required: true })}
       />
       <TextInput
-        id="password"
+        id="signin-password"
         label="Password"
         register={register('password', { required: true })}
         type="password"

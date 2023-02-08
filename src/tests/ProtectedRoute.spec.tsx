@@ -44,7 +44,7 @@ describe('ProtectedRoute', () => {
             }
             path="/"
           ></Route>
-          <Route element={<>{loginPage}</>} path="/signin"></Route>
+          <Route element={<>{loginPage}</>} path="/auth"></Route>
         </Routes>
       </BrowserRouter>
     )
