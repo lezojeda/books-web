@@ -1,9 +1,16 @@
-import axios, { AxiosError } from 'axios'
+import axios, { AxiosError, AxiosResponse } from 'axios'
+import { ErrorResponseData } from '../types'
 
-export const handleApiError = (error: unknown) => {
+export const handleApiError = (
+  error: unknown
+):
+  | AxiosResponse<ErrorResponseData>
+  | {
+      message: string
+      status: number
+    } => {
   if (axios.isAxiosError(error)) {
-    const apiError = error as AxiosError<Error>
-
+    const apiError = error as AxiosError<ErrorResponseData>
     if (apiError.response) {
       return apiError.response
     }

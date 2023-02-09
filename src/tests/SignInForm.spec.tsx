@@ -1,20 +1,14 @@
 import { describe, test, vi } from 'vitest'
 import { SignInForm } from '../components/forms'
-import { renderWithRouter, userEvent, waitFor } from './utils'
+import {
+  buildAxiosResponse,
+  renderWithRouter,
+  userEvent,
+  waitFor,
+} from './utils'
 import * as auth from '../services/auth'
 import { UserContext } from '../contexts/userContext'
 import { Route, Routes } from 'react-router-dom'
-import { ApiResponse } from '../types'
-
-function buildAxiosResponse(overrides: ApiResponse<SignInResponse>) {
-  return {
-    headers: {},
-    config: {},
-    name: '',
-    message: '',
-    ...overrides,
-  }
-}
 
 const access_token =
   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyLCJlbWFpbCI6Imxlem9qZWRhQGdtYWlsLmNvbSIsImlkIjoyfQ.E-WaZwcFrLuYu3CjLXO32NiGsCjg9WTzPa4CG2cv63c'
@@ -32,14 +26,16 @@ describe('SignInForm', () => {
     vi.clearAllMocks()
   })
 
-  test('should render form with email and password inputs', () => {
-    const { getByLabelText } = renderWithRouter(<SignInForm />)
+  test('should render form with all necessary inputs', () => {
+    const { getByLabelText, getByText } = renderWithRouter(<SignInForm />)
 
     const emailInput = getByLabelText(/E-mail/i)
     const passwordInput = getByLabelText(/password/i)
+    const submitButton = getByText(/sign in/i)
 
     expect(emailInput).toBeVisible()
     expect(passwordInput).toBeVisible()
+    expect(submitButton).toBeVisible()
   })
 
   test('should display an error message when sign in fails', async () => {

@@ -1,9 +1,8 @@
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
-import { useLocation, useNavigate } from 'react-router-dom'
 import { signUp } from '../../services/auth'
 import { AuthFormData } from '../../types'
-import { CircularProgress, PrimaryButton } from '../ui'
+import { CircularProgress, PrimaryButton, UnorderedStringList } from '../ui'
 import { TextInput } from './inputs/TextInput'
 
 export const SignUpForm = () => {
@@ -12,26 +11,25 @@ export const SignUpForm = () => {
     handleSubmit,
     formState: { isSubmitting },
   } = useForm<AuthFormData>()
-  const [errorMessage, setErrorMessage] = useState<string>()
-  const navigate = useNavigate()
-
-  // Get the previous user's location to redirect them after login
-  const location = useLocation(),
-    locationState = location.state as { from: Location },
-    from = locationState?.from?.pathname || '/'
+  const [messages, setMessages] = useState<string[]>()
 
   const onSubmit = async (data: AuthFormData) => {
-    setErrorMessage('')
-    const signInResponse = await signUp(data.email, data.password)
-    if ('data' in signInResponse) {
-      const { data } = signInResponse
+    setMessages([])
+    const signUpResponse = await signUp(data.email, data.password)
+    if ('data' in signUpResponse) {
+      const { data } = signUpResponse
       if ('id' in data) {
-        navigate(from, { replace: true })
-      } else if ('message' in data) {
-        setErrorMessage(data.message)
+        setMessages(['Account successfully created, you can sign in now'])
+        return
       }
+      if (Array.isArray(data.message)) {
+        setMessages(data.message)
+        return
+      }
+      setMessages([data.message])
+    } else if ('message' in signUpResponse) {
+      setMessages([signUpResponse.message])
     }
-    if ('message' in signInResponse) setErrorMessage(signInResponse.message)
   }
 
   return (
@@ -52,7 +50,13 @@ export const SignUpForm = () => {
       />
       <PrimaryButton content="create account" disabled={isSubmitting} />
       <div className="h-5 flex justify-center">
-        {errorMessage ? errorMessage : isSubmitting ? <CircularProgress /> : <></>}
+        {messages && messages.length > 0 ? (
+          <UnorderedStringList items={messages} />
+        ) : isSubmitting ? (
+          <CircularProgress />
+        ) : (
+          <></>
+        )}
       </div>
     </form>
   )

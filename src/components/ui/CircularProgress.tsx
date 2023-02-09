@@ -1,6 +1,6 @@
 import classNames from 'classnames'
 
-export function CircularProgress({ className }: { className?: string }) {
+export const CircularProgress = ({ className }: { className?: string }) => {
   return (
     <div
       className={classNames(

@@ -5,16 +5,16 @@ import { UserContext } from '../../contexts/userContext'
 import { signIn } from '../../services/auth'
 import { AuthFormData } from '../../types'
 import { getUserDataFromToken, setToken } from '../../utils/auth.utils'
-import { CircularProgress, PrimaryButton } from '../ui'
+import { CircularProgress, PrimaryButton, UnorderedStringList } from '../ui'
 import { TextInput } from './inputs/TextInput'
 
-export function SignInForm() {
+export const SignInForm = () => {
   const {
     register,
     handleSubmit,
     formState: { isSubmitting },
   } = useForm<AuthFormData>()
-  const [errorMessage, setErrorMessage] = useState<string>()
+  const [errorMessages, setErrorMessages] = useState<string[]>()
   const { setUser } = useContext(UserContext)
   const navigate = useNavigate()
 
@@ -24,7 +24,7 @@ export function SignInForm() {
     from = locationState?.from?.pathname || '/dashboard'
 
   const onSubmit = async (data: AuthFormData) => {
-    setErrorMessage('')
+    setErrorMessages([])
     const signInResponse = await signIn(data.email, data.password)
 
     if ('data' in signInResponse && signInResponse.data !== undefined) {
@@ -35,11 +35,15 @@ export function SignInForm() {
         setUser && userData && setUser(userData)
         setToken(access_token)
         navigate(from, { replace: true })
-      } else if ('message' in data) {
-        setErrorMessage(data.message)
+        return
       }
+      if (Array.isArray(data.message)) {
+        setErrorMessages(data.message)
+        return
+      }
+      setErrorMessages([data.message])
     } else if ('message' in signInResponse) {
-      setErrorMessage(signInResponse.message)
+      setErrorMessages([signInResponse.message])
     }
   }
 
@@ -61,8 +65,8 @@ export function SignInForm() {
       />
       <PrimaryButton content="sign in" disabled={isSubmitting} />
       <div className="h-5 flex justify-center">
-        {errorMessage ? (
-          errorMessage
+        {errorMessages && errorMessages.length > 0 ? (
+          <UnorderedStringList items={errorMessages} />
         ) : isSubmitting ? (
           <CircularProgress />
         ) : (

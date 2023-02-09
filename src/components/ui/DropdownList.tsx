@@ -13,7 +13,7 @@ export const DropdownList = ({
   loading,
   setShowDropdownList,
 }: Props) => {
-  const dropdownRef = useRef(null)
+  const dropdownRef = useRef<HTMLUListElement>(null)
   useOnClickOutside(dropdownRef, () => setShowDropdownList(false))
 
   return (
