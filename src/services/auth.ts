@@ -2,10 +2,6 @@ import { ApiResponse, User } from '../types'
 import { apiAxiosInstance } from './axios'
 import { handleApiError } from './errorHandler'
 
-type SignInResponse = {
-  access_token: string
-}
-
 export const signIn = async (
   email: string,
   password: string

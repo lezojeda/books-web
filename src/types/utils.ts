@@ -1,3 +1,5 @@
-export type ClassnameProps = {
+type ClassnameProps = {
   className?: string
 }
+
+export { type ClassnameProps }

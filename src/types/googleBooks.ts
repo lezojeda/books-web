@@ -3,7 +3,7 @@ type IndustryIdentifier = {
   identifier: string
 }
 
-export type Volume = {
+type Volume = {
   kind: string
   id: string
   etag: string
@@ -65,3 +65,5 @@ export type Volume = {
     textSnippet: string
   }
 }
+
+export { type Volume }

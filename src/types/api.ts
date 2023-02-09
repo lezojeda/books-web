@@ -1,6 +1,6 @@
 import { AxiosResponse } from 'axios'
 
-export type ApiResponse<T> =
+type ApiResponse<T> =
   | AxiosResponse<T, any> // Successful response
   | AxiosResponse<Error, any> // API handled error
   | {
@@ -8,8 +8,10 @@ export type ApiResponse<T> =
       status: number
     } // Generic error
 
-export type Collection<ItemType> = {
+type Collection<ItemType> = {
   kind: string
   totalItems: number
   items?: ItemType[]
 }
+
+export { type ApiResponse, type Collection }

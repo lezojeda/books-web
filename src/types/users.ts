@@ -1,6 +1,6 @@
 import { Book } from './books'
 
-export type User = {
+type User = {
   id: string
   createdAt: string
   updatedAt: string
@@ -9,3 +9,5 @@ export type User = {
   lastName?: string
   books: Book[]
 }
+
+export { type User }

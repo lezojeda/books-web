@@ -1,10 +1,10 @@
-export enum ReadState {
+enum ReadState {
   read = 'read',
   currentlyReading = 'currentlyReading',
   wantsToRead = 'wantsToRead',
 }
 
-export type Book = {
+type Book = {
   id: string
   bookId: string // The one coming from google books API
   userId: string
@@ -14,4 +14,6 @@ export type Book = {
   firstAuthor?: string
 }
 
-export type BookDto = Omit<Book, 'id'>
+type BookDto = Omit<Book, 'id'>
+
+export { ReadState, type Book, type BookDto }

@@ -4,8 +4,9 @@ import { renderWithRouter, userEvent, waitFor } from './utils'
 import * as auth from '../services/auth'
 import { UserContext } from '../contexts/userContext'
 import { Route, Routes } from 'react-router-dom'
+import { ApiResponse } from '../types'
 
-function buildAxiosResponse(overrides: any) {
+function buildAxiosResponse(overrides: ApiResponse<SignInResponse>) {
   return {
     headers: {},
     config: {},
