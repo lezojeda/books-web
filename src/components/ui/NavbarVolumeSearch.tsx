@@ -65,7 +65,7 @@ export const NavbarVolumeSearch = ({ className }: ClassnameProps) => {
                   width: '100%',
                 }}
               >
-                <span className="italic">{v.volumeInfo.title}</span>
+                <span>{v.volumeInfo.title}</span>
                 {' - '}
                 {v.volumeInfo.authors ? v.volumeInfo.authors[0] : ''}
               </Link>
