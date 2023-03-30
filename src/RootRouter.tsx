@@ -26,7 +26,10 @@ export const BookSearchResultsLoader = async ({
   const url = new URL(request.url)
   const searchValue = url.searchParams.get('q')
   const startIndex = Number(url.searchParams.get('startIndex'))
-  return searchVolumes(searchValue ?? '', startIndex ?? 0, 20)
+
+  const volumes = await searchVolumes(searchValue ?? '', startIndex ?? 0, 20)
+
+  return volumes
 }
 
 export const rootRouter = createBrowserRouter([

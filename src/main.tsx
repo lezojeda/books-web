@@ -8,11 +8,11 @@ import { rootRouter } from './RootRouter'
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
     <Suspense fallback={<div>Loading...</div>}>
-      <UserProvider>
-        <Layout>
-          <RouterProvider router={rootRouter} />
-        </Layout>
-      </UserProvider>
+        <UserProvider>
+          <Layout>
+            <RouterProvider router={rootRouter} />
+          </Layout>
+        </UserProvider>
     </Suspense>
   </React.StrictMode>
 )

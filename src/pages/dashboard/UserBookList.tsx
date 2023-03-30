@@ -8,7 +8,7 @@ const UserBookList = ({ books, title }: { books: Book[]; title: string }) => {
         {books.map((book) => {
           if (!book.title) return null
           return (
-            <li className="list-disc whitespace-nowrap" key={book.bookId}>
+            <li className="list-disc text-center" key={book.bookId}>
               {book.title} - {book.firstAuthor}
             </li>
           )

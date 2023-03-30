@@ -24,6 +24,8 @@ export const Volume = () => {
   const data = watch()
   const navigate = useNavigate()
 
+  const volumeAuthors = volume.volumeInfo.authors
+
   const prepareBookDto = useCallback(
     (readState: ReadState) => {
       if (user?.id) {
@@ -97,23 +99,24 @@ export const Volume = () => {
 
   return (
     <div className="text-center space-y-2 flex flex-col items-center">
-      <div className="relative w-1/2 mx-auto">
-        <div
-          className="absolute -left-10 top-1 w-8 mr-4 hover:opacity-70 cursor-pointer"
-          onClick={() => navigate(-1)}
-        >
-          <ArrowLeftIcon />
-        </div>
-        <div className="mx-auto">
-          <MainPageTitle title={volume.volumeInfo.title} />
-          {volume.volumeInfo.authors &&
-            volume.volumeInfo.authors.length > 0 && (
-              <p>by {volume.volumeInfo.authors}</p>
-            )}
+      <div className="relative w-1/2 mx-auto text-lg">
+          <div className="relative">
+            <div
+              className="absolute -left-12 top-8 w-8 hover:opacity-70 cursor-pointer"
+              onClick={() => navigate(-1)}
+            >
+              <ArrowLeftIcon />
+            </div>
+            <MainPageTitle className="mb-4" title={volume.volumeInfo.title} />
+          </div>
+          {volumeAuthors && volumeAuthors.length > 0 ? (
+            <p>by {volumeAuthors.join(', ')}</p>
+          ) : (
+            <p>Unknown author/s</p>
+          )}
           {volume.volumeInfo.publishedDate && (
             <>({volume.volumeInfo.publishedDate})</>
           )}
-        </div>
       </div>
       <form className="relative">
         <fieldset className="mb-2">

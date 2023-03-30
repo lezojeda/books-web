@@ -22,45 +22,49 @@ const BookSearchResults = () => {
 
   return (
     <div className="space-y-2 flex flex-col items-center p-8">
-      <form
-        className="flex space-x-4 items-end"
-        onSubmit={handleSubmit(onSubmit)}
-      >
-        <BookSearchInput
-          className="w-full"
-          register={register('searchValue')}
-        />
-        <PrimaryButton className="h-[34px]" content="Search" />
-      </form>
-      {searchValue && (
-        <div className="relative flex">
-          <Link
-            className=" w-8 mr-4 hover:opacity-70 cursor-pointer"
-            to="/dashboard"
-          >
-            <ArrowLeftIcon />
-          </Link>
-          <MainPageTitle
-            className="mb-2"
-            title={`Search results for "${searchValue}"`}
+      <div className="mb-12 flex flex-col items-center">
+        <form
+          className="flex space-x-4 items-end mb-4"
+          onSubmit={handleSubmit(onSubmit)}
+        >
+          <BookSearchInput
+            className="w-full"
+            register={register('searchValue')}
           />
-        </div>
-      )}
+          <PrimaryButton className="h-[34px]" content="Search" />
+        </form>
+        {searchValue && (
+          <div className="relative flex">
+            <Link
+              className="flex justify-center w-8 mr-4 hover:opacity-70 cursor-pointer"
+              to="/dashboard"
+            >
+              <ArrowLeftIcon />
+            </Link>
+            <MainPageTitle
+              className="mb-2"
+              title={`Search results for "${searchValue}"`}
+            />
+          </div>
+        )}
+      </div>
       {bookResults.items && (
         <>
           <VolumesList volumes={bookResults.items} />
-          <div>
-            <span
-              className="mr-2 hover:underline cursor-pointer"
+
+          {/* Previous / Next buttons */}
+          <div className="text-lg">
+            <a
+              className="mr-12 hover:underline cursor-pointer"
               onClick={() =>
                 setSearchParams(
                   `q=${searchValue}&startIndex=${Number(startIndex) - 20}`
                 )
               }
             >
-              previous
-            </span>
-            <span
+              Previous
+            </a>
+            <a
               className="hover:underline cursor-pointer"
               onClick={() =>
                 setSearchParams(
@@ -70,8 +74,8 @@ const BookSearchResults = () => {
                 )
               }
             >
-              next
-            </span>
+              Next
+            </a>
           </div>
         </>
       )}
