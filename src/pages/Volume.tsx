@@ -1,14 +1,14 @@
+import classNames from 'classnames'
 import debounce from 'lodash.debounce'
 import { useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { useForm } from 'react-hook-form'
-import { useLoaderData, useNavigate } from 'react-router-dom'
+import { useLoaderData } from 'react-router-dom'
 import { CircularProgress, MainPageTitle } from '../components/ui'
-import { BookDto, ReadState, Volume as VolumeType } from '../types'
+import { GoBackArrow } from '../components/ui/GoBackArrow'
 import { UserContext } from '../contexts/userContext'
-import { ArrowLeftIcon } from '@heroicons/react/24/solid'
 import { upsertBook } from '../services/books'
-import classNames from 'classnames'
 import { getMe } from '../services/users'
+import { BookDto, ReadState, Volume as VolumeType } from '../types'
 
 export const Volume = () => {
   const { user, setUser } = useContext(UserContext)
@@ -22,7 +22,6 @@ export const Volume = () => {
   const [loading, setLoading] = useState(false)
   const volume = useLoaderData() as VolumeType
   const data = watch()
-  const navigate = useNavigate()
 
   const volumeAuthors = volume.volumeInfo.authors
 
@@ -98,32 +97,30 @@ export const Volume = () => {
   }, [data.readState, debouncedUpdateUserBooks])
 
   return (
-    <div className="text-center space-y-2 flex flex-col items-center">
+    <div className="text-center space-y-2 flex flex-col items-center mb-2">
       <div className="relative w-1/2 mx-auto text-lg">
-          <div className="relative">
-            <div
-              className="absolute -left-12 top-8 w-8 hover:opacity-70 cursor-pointer"
-              onClick={() => navigate(-1)}
-            >
-              <ArrowLeftIcon />
-            </div>
-            <MainPageTitle className="mb-4" title={volume.volumeInfo.title} />
-          </div>
-          {volumeAuthors && volumeAuthors.length > 0 ? (
-            <p>by {volumeAuthors.join(', ')}</p>
-          ) : (
-            <p>Unknown author/s</p>
-          )}
-          {volume.volumeInfo.publishedDate && (
-            <>({volume.volumeInfo.publishedDate})</>
-          )}
+        <div className="relative">
+          <GoBackArrow />
+          <MainPageTitle className="mb-4" title={volume.volumeInfo.title} />
+        </div>
+        {volumeAuthors && volumeAuthors.length > 0 ? (
+          <p>by {volumeAuthors.join(', ')}</p>
+        ) : (
+          <p>Unknown author/s</p>
+        )}
+        {volume.volumeInfo.publishedDate && (
+          <>({volume.volumeInfo.publishedDate})</>
+        )}
       </div>
       <form className="relative">
-        <fieldset className="mb-2">
-          <legend className="hidden">Add book to:</legend>
+          <label className="hidden" htmlFor="book-status-select">
+            Add book to:
+          </label>
           <select
+            className="p-2 border border-primary-light rounded"
             defaultValue={selectedDefaultValue}
             disabled={loading}
+            id="book-status-select"
             {...register('readState')}
           >
             <option value="">Add book to:</option>
@@ -131,7 +128,6 @@ export const Volume = () => {
             <option value="wantsToRead">Want to read</option>
             <option value="read">Already read</option>
           </select>
-        </fieldset>
         <div className="h-4 absolute top-0 -right-8">
           <CircularProgress
             className={classNames('w-4 h-4', loading ? 'visible' : 'hidden')}

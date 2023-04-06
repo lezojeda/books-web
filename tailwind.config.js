@@ -7,13 +7,13 @@ module.exports = {
       colors: {
         primary: {
           light: '#b595a4',
-          DEFAULT: '#856775',
+          DEFAULT: '#765B5F',
         },
         secondary: {
           DEFAULT: '#87967a',
         },
-        black: '#576371',
         backgroundColor: '#e6eef2',
+        black: '#576371',
         white: '#f5f5f5',
       },
     },

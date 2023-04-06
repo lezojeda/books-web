@@ -44,7 +44,7 @@ const BookSearchResults = () => {
           <PrimaryButton className="h-[34px]" content="Search" />
         </form>
         {searchValue && (
-          <div className="relative flex">
+          <div className="relative flex" tabIndex={0}>
             <Link
               className="flex justify-center w-8 mr-4 hover:opacity-70 cursor-pointer"
               to="/dashboard"
