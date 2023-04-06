@@ -20,6 +20,16 @@ const BookSearchResults = () => {
     setSearchParams(`q=${data.searchValue}`)
   }
 
+  const seePreviousPage = () => {
+    setSearchParams(`q=${searchValue}&startIndex=${Number(startIndex) - 20}`)
+  }
+
+  const seeNextPage = () => {
+    setSearchParams(
+      `q=${searchValue}&startIndex=${startIndex ? Number(startIndex) + 20 : 20}`
+    )
+  }
+
   return (
     <div className="space-y-2 flex flex-col items-center p-8">
       <div className="mb-12 flex flex-col items-center">
@@ -56,23 +66,25 @@ const BookSearchResults = () => {
           <div className="text-lg">
             <a
               className="mr-12 hover:underline cursor-pointer"
-              onClick={() =>
-                setSearchParams(
-                  `q=${searchValue}&startIndex=${Number(startIndex) - 20}`
-                )
-              }
+              onClick={seePreviousPage}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  seePreviousPage()
+                }
+              }}
+              tabIndex={0}
             >
               Previous
             </a>
             <a
               className="hover:underline cursor-pointer"
-              onClick={() =>
-                setSearchParams(
-                  `q=${searchValue}&startIndex=${
-                    startIndex ? Number(startIndex) + 20 : 20
-                  }`
-                )
-              }
+              onClick={seeNextPage}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  seeNextPage()
+                }
+              }}
+              tabIndex={0}
             >
               Next
             </a>

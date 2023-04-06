@@ -10,4 +10,10 @@ type User = {
   books: Book[]
 }
 
-export { type User }
+type GoogleAuthDto = {
+  email: string
+  firstName?: string
+  lastName?: string
+}
+
+export { type User, type GoogleAuthDto }

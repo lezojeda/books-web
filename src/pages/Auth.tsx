@@ -6,7 +6,7 @@ const SignIn = () => {
     <div className="my-auto text-center">
       <MainPageTitle className="mb-4" title="Sign in" />
       <SignInForm />
-      <MainPageTitle className="mb-4" title="Create account" />
+      <MainPageTitle className="mt-6 mb-4" title="Create account" />
       <SignUpForm />
     </div>
   )

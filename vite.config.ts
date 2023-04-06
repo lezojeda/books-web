@@ -16,4 +16,7 @@ export default defineConfig({
       reporter: ['html']
     },
   },
+  server: {
+    port: 5174
+  }
 })

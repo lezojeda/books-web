@@ -9,7 +9,7 @@ export const PrimaryButton = ({
   return (
     <GenericButton
       className={classNames(
-        'bg-primary text-white disabled:bg-gray-100 disabled:text-gray-400 hover:opacity-70',
+        'bg-primary text-white disabled:bg-gray-100 disabled:text-gray-400 hover:opacity-70 filter shadow-sm shadow-[#576371]',
         className
       )}
       content={content}

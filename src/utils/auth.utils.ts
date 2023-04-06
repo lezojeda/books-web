@@ -1,15 +1,6 @@
 import jwtDecode from 'jwt-decode'
 import { UserContextType } from '../contexts/userContext'
-import { Book } from '../types/books'
-
-type TokenData = {
-  sub: number
-  email: string
-  id: string
-  books: Book[]
-  iat: number
-  exp: number
-}
+import { APITokenData, GoogleTokenData, User } from '../types'
 
 export const TOKEN_ITEM_KEY = 'token-books'
 
@@ -20,11 +11,25 @@ export const isAuthenticated = () => {
 
 export const getUserDataFromToken = (token: string): UserContextType | null => {
   try {
-    const tokenData: TokenData = jwtDecode(token)
+    const tokenData: APITokenData = jwtDecode(token)
     const user = {
       email: tokenData.email,
       books: tokenData.books,
       id: tokenData.id,
+    }
+    return user
+  } catch (error) {
+    return null
+  }
+}
+
+export const getUserDataFromGoogleToken = (token: string): Pick<User, 'email' | 'firstName' | 'lastName'> | null => {
+  try {
+    const tokenData: GoogleTokenData = jwtDecode(token)
+    const user = {
+      email: tokenData.email,
+      firstName: tokenData.given_name,
+      lastName: tokenData.family_name,
     }
     return user
   } catch (error) {
@@ -43,7 +48,7 @@ export const isTokenExpired = (): boolean => {
   const token = getToken()
 
   if (token) {
-    const tokenData: TokenData = jwtDecode(token)
+    const tokenData: APITokenData = jwtDecode(token)
     const currentDate = new Date()
     if (tokenData.exp * 1000 < currentDate.getTime()) {
       return true
