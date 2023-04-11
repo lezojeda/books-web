@@ -16,7 +16,7 @@ const VolumeListItem = ({
       key={volume.id}
     >
       <div className="flex items-center">
-        <div className="w-8 h-16 xl:w-16 xl:h-32 mr-6">
+        <div className="w-24 h-32 xl:w-32 xl:h-48 mr-6">
           <Link to={`/volumes/${volume.id}`}>
             <img
               alt={`Cover image for ${volume.volumeInfo.title}`}
