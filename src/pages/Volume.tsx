@@ -119,7 +119,7 @@ export const Volume = () => {
 
   return (
     <div className="text-center space-y-2 flex flex-col items-center mb-2">
-      <div className="relative mx-auto text-lg">
+      <div className="relative max-w-2xl mx-auto text-lg">
         <div className="relative">
           <GoBackArrow />
           <MainPageTitle className="mb-4" title={volume.volumeInfo.title} />
