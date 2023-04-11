@@ -3,7 +3,8 @@ import { isAuthenticated, isTokenExpired } from '../utils/auth.utils'
 
 export const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
   const location = useLocation()
-  if (!isAuthenticated() || isTokenExpired()) {
+  const userIsNotAuthenticated = !isAuthenticated() || isTokenExpired()
+  if (userIsNotAuthenticated) {
     return <Navigate to="/auth" state={{ from: location }} replace />
   }
   return children

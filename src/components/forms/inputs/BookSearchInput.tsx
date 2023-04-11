@@ -12,6 +12,7 @@ export const BookSearchInput = ({
   return (
     <TextInput
       className={classNames(className)}
+      labelClassName="text-center"
       id="search"
       label="Search books:"
       placeholder="Search by author, book name..."

@@ -22,8 +22,8 @@ export const DropdownList = ({
       ref={dropdownRef}
     >
       {loading && (
-        <div className="py-2">
-          <CircularProgress />
+        <div className="py-2 h-full flex flex-col justify-center">
+          <CircularProgress className="h-10 w-10"/>
         </div>
       )}
       {children}

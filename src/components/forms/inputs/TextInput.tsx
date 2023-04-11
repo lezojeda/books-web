@@ -4,6 +4,7 @@ import { UseFormRegisterReturn } from 'react-hook-form'
 
 export type Props = ComponentPropsWithoutRef<'input'> & {
   label: string
+  labelClassName?: string
   register: UseFormRegisterReturn
 }
 
@@ -11,13 +12,14 @@ export const TextInput = ({
   className,
   id,
   label,
+  labelClassName,
   placeholder,
   register,
   type = 'text',
 }: Props) => {
   return (
     <div>
-      <label className="block" htmlFor={id}>
+      <label className={classNames(labelClassName, 'block')} htmlFor={id}>
         {label}
       </label>
       <input
