@@ -1,12 +1,17 @@
-import classNames from 'classnames'
 import debounce from 'lodash.debounce'
 import { useCallback, useContext, useEffect, useMemo, useState } from 'react'
-import { useForm } from 'react-hook-form'
+import {
+  useForm
+} from 'react-hook-form'
 import { useLoaderData } from 'react-router-dom'
-import { CircularProgress, MainPageTitle } from '../components/ui'
+import { ErrorMessagesList } from '../components/forms/ErrorMessagesList'
+import { UpdateBookStatusForm } from '../components/forms/UpdateBookStatusForm'
+import {
+  MainPageTitle
+} from '../components/ui'
 import { GoBackArrow } from '../components/ui/GoBackArrow'
 import { UserContext } from '../contexts/userContext'
-import { upsertBook } from '../services/books'
+import { UpserBookResponse, upsertBook } from '../services/books'
 import { getMe } from '../services/users'
 import { BookDto, ReadState, Volume as VolumeType } from '../types'
 
@@ -15,10 +20,11 @@ export const Volume = () => {
   const {
     register,
     watch,
-    formState: { isValid, isValidating, isDirty },
+    formState: { isSubmitting, isValid, isValidating, isDirty },
   } = useForm<{
     readState: ReadState
   }>()
+  const [errorMessages, setErrorMessages] = useState<string[]>()
   const [loading, setLoading] = useState(false)
   const volume = useLoaderData() as VolumeType
   const data = watch()
@@ -64,6 +70,25 @@ export const Volume = () => {
     }
   }, [setUser])
 
+  const handleUpsertBookResponse = useCallback(
+    (response: UpserBookResponse) => {
+      if ('data' in response) {
+        if (response.data instanceof Object && 'message' in response.data) {
+          if (Array.isArray(response.data.message)) {
+            setErrorMessages(response.data.message)
+            return
+          }
+          setErrorMessages([response.data.message])
+        } else {
+          updateUserBooks()
+        }
+      } else {
+        setErrorMessages([response.message])
+      }
+    },
+    [updateUserBooks]
+  )
+
   const debouncedUpdateUserBooks = useMemo(() => {
     return debounce(async (readState: ReadState) => {
       const bookDto = prepareBookDto(readState)
@@ -72,15 +97,11 @@ export const Volume = () => {
         setLoading(true)
         const response = await upsertBook(bookDto)
 
-        if (response) {
-          if (response.status === 200) {
-            updateUserBooks()
-          }
-        }
+        handleUpsertBookResponse(response)
         setLoading(false)
       }
     }, 500)
-  }, [prepareBookDto, updateUserBooks])
+  }, [handleUpsertBookResponse, prepareBookDto])
 
   const selectedDefaultValue = useMemo(() => {
     const bookFromUserBooks = user?.books.find(
@@ -112,28 +133,12 @@ export const Volume = () => {
           <>({volume.volumeInfo.publishedDate})</>
         )}
       </div>
-      <form className="relative">
-          <label className="hidden" htmlFor="book-status-select">
-            Add book to:
-          </label>
-          <select
-            className="p-2 border border-primary-light rounded"
-            defaultValue={selectedDefaultValue}
-            disabled={loading}
-            id="book-status-select"
-            {...register('readState')}
-          >
-            <option value="">Add book to:</option>
-            <option value="currentlyReading">Currently reading</option>
-            <option value="wantsToRead">Want to read</option>
-            <option value="read">Already read</option>
-          </select>
-        <div className="h-4 absolute top-0 -right-8">
-          <CircularProgress
-            className={classNames('w-4 h-4', loading ? 'visible' : 'hidden')}
-          />
-        </div>
-      </form>
+      <UpdateBookStatusForm
+        loading={loading}
+        register={register}
+        selectedDefaultValue={selectedDefaultValue}
+      />
+      <ErrorMessagesList errorMessages={errorMessages} loading={isSubmitting} />
     </div>
   )
 }

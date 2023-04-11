@@ -3,9 +3,19 @@ import { useForm } from 'react-hook-form'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { UserContext } from '../../contexts/userContext'
 import { googleAuth, signIn } from '../../services/auth'
-import { ApiResponse, AuthFormData, GoogleCredentialsResponse, SignInResponse } from '../../types'
-import { getUserDataFromGoogleToken, getUserDataFromToken, setToken } from '../../utils/auth.utils'
-import { CircularProgress, PrimaryButton, UnorderedStringList } from '../ui'
+import {
+  ApiResponse,
+  AuthFormData,
+  GoogleCredentialsResponse,
+  SignInResponse,
+} from '../../types'
+import {
+  getUserDataFromGoogleToken,
+  getUserDataFromToken,
+  setToken,
+} from '../../utils/auth.utils'
+import { PrimaryButton } from '../ui'
+import { ErrorMessagesList } from './ErrorMessagesList'
 import { TextInput } from './inputs/TextInput'
 
 declare global {
@@ -13,7 +23,6 @@ declare global {
     handleGoogleCredentialResponse(response: GoogleCredentialsResponse): void
   }
 }
-
 
 export const SignInForm = () => {
   const {
@@ -59,7 +68,9 @@ export const SignInForm = () => {
   }
 
   // Must declare it as a window method so it can be used as value for data-callback attribute
-  window.handleGoogleCredentialResponse = async (response: GoogleCredentialsResponse) => {
+  window.handleGoogleCredentialResponse = async (
+    response: GoogleCredentialsResponse
+  ) => {
     const user = getUserDataFromGoogleToken(response.credential)
     if (user) {
       const googleAuthResponse = await googleAuth(user)
@@ -98,13 +109,10 @@ export const SignInForm = () => {
           type="password"
         />
         <PrimaryButton content="sign in" disabled={isSubmitting} />
-        <div className="h-5 flex justify-center">
-          {errorMessages && errorMessages.length > 0 ? (
-            <UnorderedStringList items={errorMessages} />
-          ) : isSubmitting ? (
-            <CircularProgress />
-          ) : null}
-        </div>
+        <ErrorMessagesList
+          errorMessages={errorMessages}
+          loading={isSubmitting}
+        />
       </form>
       <p className="text-lg mb-[20px]">OR</p>
       <div
