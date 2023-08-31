@@ -1,6 +1,8 @@
 # How to run
 
-With the [Books API](https://github.com/lezojeda/books-api) running in the same environment:
+> **Important**
+>
+> The project depends on the [Books API](https://github.com/lezojeda/books-api) to run properly. Download an run the API first.
 
 ```bash
 $ npm i
