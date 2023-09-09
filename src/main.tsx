@@ -4,6 +4,7 @@ import { RouterProvider } from 'react-router-dom'
 import { UserProvider } from './contexts/userContext'
 import Layout from './layouts/MainLayout'
 import { rootRouter } from './RootRouter'
+import './index.css'
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>

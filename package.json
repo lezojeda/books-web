@@ -5,9 +5,9 @@
   "scripts": {
     "build": "tsc && vite build",
     "dev": "vite",
+    "preview": "vite preview",
     "format": "npx prettier --write .",
     "lint": "eslint ./src --ext .ts,.tsx",
-    "preview": "vite preview",
     "test": "vitest",
     "coverage": "vitest run --coverage"
   },
