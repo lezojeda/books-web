@@ -4,7 +4,7 @@
   "version": "0.0.0",
   "scripts": {
     "build": "tsc && vite build",
-    "dev": "vite && npx tailwindcss -i ./src/index.css -o ./dist/output.css --watch",
+    "dev": "vite",
     "format": "npx prettier --write .",
     "lint": "eslint ./src --ext .ts,.tsx",
     "preview": "vite preview",
